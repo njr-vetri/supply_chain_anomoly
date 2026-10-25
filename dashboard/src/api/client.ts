@@ -1,11 +1,11 @@
 import type {
   Action, ActionCreateRequest, AlertHistoryItem, Anomaly, Approval, ApprovalCreateRequest,
-  AuditEvent, CapabilityResult, DatasetSource, DecisionRequest, DriftResult, EvalOutcomeResult,
+  AuditEvent, DatasetSource, DecisionRequest, DriftResult, EvalOutcomeResult,
   GraphResponse, Health, Hypothesis, HypothesisCreateRequest, HypothesisReviewRequest,
-  ImportJob, KillSwitchRequest, MappingSuggestion, MappingVersion, ModelMetrics, Outcome, Page,
+  ImportJob, KillSwitchRequest, MappingVersion, ModelMetrics, Outcome, Page,
   PipelineDryRunResult, Prediction, QualityItem, Recommendation, RelationshipPreview,
   SupplyGraphResponse, WhatIfRequest, AggregatedGraphResponse, AggregatedTraceResponse,
-  Role,
+  Role, MappingSuggestionReport, PipelineRunDetail,
 } from './types'
 
 export class ApiError extends Error {
@@ -112,8 +112,17 @@ export class ApiClient {
 
   // ── Mapping ─────────────────────────────────────────────────────────────────
   datasetSuggestions(datasetName: string) {
-    return this.request<{ suggestions: MappingSuggestion[]; capabilities?: CapabilityResult[] }>(
+    return this.request<MappingSuggestionReport>(
       `/datasets/${encodeURIComponent(datasetName)}/suggestions`,
+    )
+  }
+  confirmDatasetMapping(datasetName: string, mappings: Record<string, string>, description?: string) {
+    return this.request<Record<string, unknown>>(
+      `/datasets/${encodeURIComponent(datasetName)}/confirm-mapping`,
+      {
+        method: 'PUT',
+        body: JSON.stringify({ mappings, description }),
+      },
     )
   }
   mappingVersions(datasetName: string) {
@@ -330,6 +339,22 @@ export class ApiClient {
     return this.request<PipelineDryRunResult>('/pipeline/run', {
       method: 'POST', body: JSON.stringify({ datasets }),
     })
+  }
+  runProjectPipeline(projectId: string) {
+    return this.request<PipelineRunDetail>(
+      `/projects/${encodeURIComponent(projectId)}/pipeline/run`,
+      { method: 'POST', body: JSON.stringify({}) },
+    )
+  }
+  latestPipelineRun(projectId: string) {
+    return this.request<PipelineRunDetail>(
+      `/projects/${encodeURIComponent(projectId)}/pipeline/runs/latest`,
+    )
+  }
+  pipelineRun(runId: string) {
+    return this.request<PipelineRunDetail>(
+      `/pipeline/runs/${encodeURIComponent(runId)}`,
+    )
   }
 
   // ── Auth & Accounts ─────────────────────────────────────────────────────────

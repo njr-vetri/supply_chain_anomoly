@@ -1,3 +1,0 @@
-{"event": "alert_routed", "source": "synthetic", "incident_key": "synthetic-incident", "severity": "LOW", "group_id": "e3811189924e2243", "first_seen": "2026-10-24T06:22:00.686558+00:00", "last_seen": "2026-10-24T06:22:00.686558+00:00", "status": "ROUTED", "routes": ["console"]}
-{"event": "alert_assigned", "group_id": "e3811189924e2243", "actor": "synthetic-analyst", "assigned_to": "synthetic-reviewer", "at": "2026-10-24T06:22:00.687590+00:00", "status": "OPEN"}
-{"event": "alert_acknowledged", "group_id": "e3811189924e2243", "actor": "synthetic-analyst", "reason": "synthetic acknowledgement", "at": "2026-10-24T06:22:00.688326+00:00", "status": "ACKNOWLEDGED"}

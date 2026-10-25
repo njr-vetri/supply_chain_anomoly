@@ -111,3 +111,46 @@ class WebhookNotificationAdapter:
                 raise RuntimeError(f"Webhook returned HTTP {response.status}")
         return {"status": "SIMULATED" if self.simulated else "SENT",
                 "label": "SIMULATED" if self.simulated else "REAL", "connector": "webhook"}
+
+
+class TelegramNotificationAdapter:
+    def __init__(self, *, token_env: str = "TELEGRAM_BOT_TOKEN", chat_id_env: str = "TELEGRAM_CHAT_ID",
+                 timeout_seconds: int = 10, enabled_env: str = "CONNECTORS_ENABLED",
+                 request_transport: Callable | None = None):
+        self.token_env = token_env
+        self.chat_id_env = chat_id_env
+        self.timeout = timeout_seconds
+        self.enabled_env = enabled_env
+        self.simulated = request_transport is not None
+        self.request_transport = request_transport or urlopen
+
+    def health_check(self) -> ConnectorHealth:
+        if os.getenv(self.enabled_env, "false").lower() != "true":
+            return ConnectorHealth("telegram", "DRY_RUN", datetime.now(timezone.utc).isoformat(),
+                                   "notifications are disabled; no Telegram connection attempted")
+        token = os.getenv(self.token_env)
+        chat_id = os.getenv(self.chat_id_env)
+        if not token or not chat_id:
+            return ConnectorHealth("telegram", "UNAVAILABLE", datetime.now(timezone.utc).isoformat(),
+                                   "Telegram credentials missing in environment")
+        return ConnectorHealth("telegram", "HEALTHY", datetime.now(timezone.utc).isoformat(),
+                               "Telegram configuration verified from environment")
+
+    def send(self, *, subject: str, message: str) -> dict:
+        if os.getenv(self.enabled_env, "false").lower() != "true":
+            return {"status": "DRY_RUN", "label": "DRY_RUN", "connector": "telegram"}
+        token = os.getenv(self.token_env)
+        chat_id = os.getenv(self.chat_id_env)
+        if not token or not chat_id:
+            return {"status": "FAILED", "label": "FAILED", "reason": "Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID", "connector": "telegram"}
+        import json
+        endpoint = f"https://api.telegram.org/bot{token}/sendMessage"
+        payload = json.dumps({"chat_id": chat_id, "text": f"*{subject}*\n\n{message}"}).encode("utf-8")
+        req = Request(endpoint, data=payload, headers={"Content-Type": "application/json"}, method="POST")
+        try:
+            with self.request_transport(req, timeout=self.timeout) as resp:
+                if 200 <= resp.status < 300:
+                    return {"status": "SENT", "label": "REAL", "connector": "telegram"}
+                return {"status": "FAILED", "label": "FAILED", "error": f"HTTP {resp.status}", "connector": "telegram"}
+        except Exception as exc:
+            return {"status": "RETRYING", "label": "RETRYING", "error": str(exc), "connector": "telegram"}

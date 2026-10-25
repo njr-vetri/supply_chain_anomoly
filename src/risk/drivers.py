@@ -11,14 +11,25 @@ DIMENSIONS = {
     "supplier": ("supplier_id", "supplier"),
     "carrier": ("carrier_id", "carrier"),
     "product": ("product_id", "product"),
+    "route": ("route", "shipping_route", "lane", "transit_lane"),
     "region": ("region", "destination", "region_id"),
     "mode": ("mode", "shipping_mode", "transport_mode"),
     "week": ("event_timestamp", "timestamp", "date"),
 }
 
+PAIR_DIMENSIONS = [
+    ("carrier", "route", "carrier_route"),
+    ("supplier", "carrier", "supplier_carrier"),
+]
+
 
 def _value(row: dict[str, Any], dimension: str) -> str | None:
-    for key in DIMENSIONS[dimension]:
+    if dimension in PAIR_DIMENSIONS_MAP:
+        dim1, dim2 = PAIR_DIMENSIONS_MAP[dimension]
+        v1, v2 = _value(row, dim1), _value(row, dim2)
+        return f"{v1} x {v2}" if v1 and v2 else None
+
+    for key in DIMENSIONS.get(dimension, ()):
         value = row.get(key)
         if value is None or value == "":
             continue
@@ -30,6 +41,9 @@ def _value(row: dict[str, Any], dimension: str) -> str | None:
                 continue
         return str(value)
     return None
+
+
+PAIR_DIMENSIONS_MAP = {p[2]: (p[0], p[1]) for p in PAIR_DIMENSIONS}
 
 
 def _fisher_two_sided(a: int, b: int, c: int, d: int) -> float:
@@ -91,11 +105,37 @@ def _change_point(rows: list[dict[str, Any]], affected_refs: set[str], min_segme
             "absolute_rate_change": best[0], "label": "descriptive change-point estimate; not causal"}
 
 
+def _check_confounding(target_item: dict[str, Any], candidate_drivers: list[dict[str, Any]],
+                       rows: list[dict[str, Any]], affected: set[str]) -> tuple[bool, str | None]:
+    """Test if a candidate finding is explained by single-driver confounding with a primary driver."""
+    dim_b, val_b = target_item["dimension"], target_item["value"]
+    for primary in candidate_drivers:
+        dim_a, val_a = primary["dimension"], primary["value"]
+        if dim_a == dim_b and val_a == val_b:
+            continue
+        if primary["rank"] >= target_item["rank"]:
+            continue
+        # Take rows where primary driver A is ABSENT
+        outside_a = [r for r in rows if _value(r, dim_a) != val_a]
+        if not outside_a:
+            continue
+        inside_b_outside_a = [r for r in outside_a if _value(r, dim_b) == val_b]
+        outside_b_outside_a = [r for r in outside_a if _value(r, dim_b) != val_b]
+        cases_in = sum(1 for r in inside_b_outside_a if str(r.get("source_record_ref") or r.get("event_id") or "") in affected)
+        cases_out = sum(1 for r in outside_b_outside_a if str(r.get("source_record_ref") or r.get("event_id") or "") in affected)
+        rate_in = cases_in / len(inside_b_outside_a) if inside_b_outside_a else 0.0
+        rate_out = cases_out / len(outside_b_outside_a) if outside_b_outside_a else 0.0
+        # If conditioning on absence of A eliminates the difference in B (< 0.05 rate difference)
+        if (rate_in - rate_out) < 0.05 or cases_in == 0:
+            return True, f"explained by {dim_a}={val_a}"
+    return False, None
+
+
 def analyze_drivers(records: Iterable[dict[str, Any]], affected_record_refs: Iterable[str], *,
                     min_affected: int = 5, min_baseline: int = 5, alpha: float = 0.05,
                     min_effect_size: float = 0.1, min_change_point_segment: int = 5,
                     max_refs: int = 100) -> dict[str, Any]:
-    """Compare affected rows with the remaining rows and return ranked hypotheses."""
+    """Compare affected rows with the remaining rows and return ranked contributing factor hypotheses."""
     if min_affected < 1 or min_baseline < 1 or not 0 < alpha < 1:
         raise ValueError("Support thresholds and alpha are invalid")
     rows = [dict(row) for row in records]
@@ -105,7 +145,9 @@ def analyze_drivers(records: Iterable[dict[str, Any]], affected_record_refs: Ite
         return {"status": "Insufficient evidence", "confident_driver": False, "drivers": [],
                 "change_point": None, "limitations": ["Affected source references are missing or not present in the baseline."]}
     findings: list[dict[str, Any]] = []
-    for dimension in DIMENSIONS:
+
+    all_dimensions = list(DIMENSIONS.keys()) + [p[2] for p in PAIR_DIMENSIONS]
+    for dimension in all_dimensions:
         values = [_value(row, dimension) for row in rows]
         categories = sorted({value for value in values if value is not None})
         for category in categories:
@@ -129,7 +171,9 @@ def analyze_drivers(records: Iterable[dict[str, Any]], affected_record_refs: Ite
                 "contradicting_record_refs": [str(row.get("source_record_ref") or row.get("event_id")) for row in outside_cases[:max_refs]],
                 "missing_evidence": ["Independent operational evidence establishing a mechanism.",
                                      "Validation on a later time period or an independent sample."],
-                "statement": f"{dimension}={category} is associated with a different affected-record rate."})
+                "statement": f"{dimension}={category} is a contributing factor associated with elevated affected-record rate.",
+                "role_label": "contributing factor",
+                "status": "UNVERIFIED"})
     _bh_adjust(findings)
     findings.sort(key=lambda item: (abs(item["effect_size"]), -item["adjusted_p_value"]), reverse=True)
     for rank, item in enumerate(findings, start=1):
@@ -138,6 +182,15 @@ def analyze_drivers(records: Iterable[dict[str, Any]], affected_record_refs: Ite
             and item["support"]["baseline_in_group"] >= min_baseline
             and item["adjusted_p_value"] <= alpha and abs(item["effect_size"]) >= min_effect_size)
         item["interpretation"] = "correlation, not proof"
+
+    # Single-driver confounding analysis across candidate drivers
+    for item in findings:
+        confounded, reason = _check_confounding(item, findings, rows, affected)
+        item["confounded"] = confounded
+        item["confounding_status"] = reason if confounded else "independent"
+        if confounded:
+            item["confident_driver"] = False
+
     confident = any(item["confident_driver"] for item in findings)
     return {"status": "HYPOTHESES_AVAILABLE" if findings else "Insufficient evidence",
         "confident_driver": confident, "drivers": findings,

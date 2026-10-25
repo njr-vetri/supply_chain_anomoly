@@ -96,10 +96,19 @@ def forecast_canonical_demand(records: list[dict[str, Any]], settings: Any) -> d
                 "granularity": granularity, "records": len(eligible),
                 "minimum_history_periods": settings.minimum_history_periods,
                 "inventory_available": False, "label": FORECAST_NOTE}
+    def _calc_smape(method_name: str) -> float | None:
+        subset = [r for r in tracking if r["method"] == method_name]
+        if not subset:
+            return None
+        smapes = [200.0 * abs(r["observed"] - r["predicted"]) / (abs(r["observed"]) + abs(r["predicted"]) + 1e-8)
+                  for r in subset]
+        return float(np.mean(smapes))
+
     metrics = {method: {"backtest_rows": sum(row["method"] == method for row in tracking),
                         "mae": float(np.mean([row["absolute_error"] for row in tracking
                                               if row["method"] == method])) if any(
-                            row["method"] == method for row in tracking) else None}
+                            row["method"] == method for row in tracking) else None,
+                        "smape": _calc_smape(method)}
                for method in methods}
     return {"status": "COMPUTED", "task": "demand pressure forecasting", "granularity": granularity,
             "entity_roles": entities, "forecast_horizon_periods": horizon,

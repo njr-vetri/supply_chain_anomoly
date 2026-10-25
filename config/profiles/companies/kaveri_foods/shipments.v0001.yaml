@@ -3,8 +3,8 @@ version: v0001
 description: Kaveri Foods mapping for shipments
 source_file: 9aefbbc392f944f6b85d10460f1908c9abc6663aed84f1ab2840599d517a48fe_shipments.csv
 source_archive_sha256: 9aefbbc392f944f6b85d10460f1908c9abc6663aed84f1ab2840599d517a48fe
-created_at: '2026-10-25T10:14:30.916445Z'
-updated_at: '2026-10-25T10:14:30.916450Z'
+created_at: '2026-10-25T14:57:01.536241Z'
+updated_at: '2026-10-25T14:57:01.536248Z'
 mappings:
   shipment_ref: shipment_id
   po_number: order_id

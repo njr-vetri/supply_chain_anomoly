@@ -3,8 +3,8 @@ version: v0001
 description: Kaveri Foods mapping for vendors
 source_file: 0b792846b9778fd33d8353b8fb9f6e45780a59283adcfa562a4d55fed0b3c309_vendors.csv
 source_archive_sha256: 0b792846b9778fd33d8353b8fb9f6e45780a59283adcfa562a4d55fed0b3c309
-created_at: '2026-10-25T10:14:31.104458Z'
-updated_at: '2026-10-25T10:14:31.104462Z'
+created_at: '2026-10-25T14:57:01.750170Z'
+updated_at: '2026-10-25T14:57:01.750175Z'
 mappings:
   vendor_code: supplier_id
   vendor_name: supplier_name

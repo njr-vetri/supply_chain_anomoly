@@ -25,6 +25,7 @@ import { SystemHealthScreen } from './components/SystemHealthScreen'
 import { UsersScreen } from './components/UsersScreen'
 import { ApiKeysScreen } from './components/ApiKeysScreen'
 import { ProjectSelector } from './components/ProjectSelector'
+import { OnePagePrototype } from './components/OnePagePrototype'
 import './style.css'
 
 type Screen =
@@ -363,6 +364,7 @@ function App() {
   const [expiredMsg, setExpiredMsg] = useState<string | null>(null)
   const [changePwdOpen, setChangePwdOpen] = useState(false)
   const [profileModalOpen, setProfileModalOpen] = useState(false)
+  const [showAdvancedNav, setShowAdvancedNav] = useState(false)
 
   // Show login gate when no token is present
   const needsLogin = !session.token.trim()
@@ -414,6 +416,11 @@ function App() {
   }
 
   const navItems: Array<{ id: Exclude<Screen, 'notFound'>; label: string; icon: ReactNode; section?: string }> = useMemo(() => {
+    if (!showAdvancedNav) {
+      return [
+        { id: 'overview', label: 'One-Page ML Prototype', icon: <Cpu size={17} />, section: 'AUTONOMOUS PIPELINE' },
+      ]
+    }
     const role = session.role
     if (role === 'viewer') {
       return [
@@ -459,7 +466,7 @@ function App() {
       { id: 'audit', label: 'Audit Log', icon: <FileSearch size={17} /> },
       { id: 'settings', label: 'Settings', icon: <Settings2 size={17} /> },
     ]
-  }, [session.role])
+  }, [session.role, showAdvancedNav])
 
   function navigate(to: Screen) {
     if (to === 'notFound') return
@@ -593,6 +600,15 @@ function App() {
               </button>
             </div>
           ))}
+          <div className="pt-2 px-3">
+            <button
+              onClick={() => setShowAdvancedNav(!showAdvancedNav)}
+              className="text-[11px] text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition py-1"
+            >
+              <Settings2 size={12} />
+              <span>{showAdvancedNav ? 'Hide Advanced Console' : 'Show Advanced Views'}</span>
+            </button>
+          </div>
         </nav>
         <div className="side-status">
           <span className={`status-dot ${connected ? 'bg-emerald-500' : 'bg-slate-400'}`} />
@@ -706,7 +722,13 @@ function App() {
           {health.error && <div className="mb-5"><ErrorPanel message={health.error} onRetry={() => void refresh()} /></div>}
           {screen === 'notFound' ? <NotFoundPage goHome={() => navigate('overview')} />
             : selected ? <IncidentView detail={detail} recommendations={incidentRecs} actions={relatedActions} approvals={relatedApprovals} role={session.role} rationales={rationales} setRationales={setRationales} confirmHypothesis={confirmHypothesis} confirming={confirming} onBack={() => navigate('incidents')} retry={() => void fetchDetail(selected)} />
-            : screen === 'overview' ? <Overview incidents={incidents} quality={quality} onOpen={() => navigate('incidents')} onUpload={() => navigate('datasources')} retry={() => void refresh()} />
+            : screen === 'overview' ? (
+                showAdvancedNav ? (
+                  <Overview incidents={incidents} quality={quality} onOpen={() => navigate('incidents')} onUpload={() => navigate('datasources')} retry={() => void refresh()} />
+                ) : (
+                  <OnePagePrototype client={client} projectId={company.projectId || 'project-kaveri_foods'} userRole={session.role} onRoleChange={(r) => setSession({ ...session, role: r })} />
+                )
+              )
             : screen === 'incidents' ? <IncidentList state={incidents} filtered={filtered} search={search} setSearch={setSearch} sort={sort} setSort={setSort} severity={severity} setSeverity={setSeverity} status={status} setStatus={setStatus} open={(id) => void loadDetail(id)} retry={() => void refresh()} />
             : screen === 'graph' ? <Suspense fallback={<LoadingState large />}><DependencyGraph client={client} incidents={items} /></Suspense>
             : screen === 'hypotheses' ? <HypothesisLedgerScreen client={client} role={session.role} incidents={items} />

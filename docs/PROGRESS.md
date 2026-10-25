@@ -1,5 +1,53 @@
 # Phase progress
 
+## Completed: Simplified One-Page ML Prototype & Automated Transparency Pipeline
+
+- **Execution Date**: 2026-10-25
+- **Git Checkpoint**: Tagged `pre-simplify` commit `a1a7ec9` before refactoring; verified all dataset archives, `.env`, and model binaries are untouched.
+- **One-Page ML Prototype Component (`dashboard/src/components/OnePagePrototype.tsx`)**:
+  - Implemented single-page workflow: file upload (`.zip`, `.csv`, `.xlsx`, `.json`), schema mapping review with explicit ambiguity distinction (confident auto-accepted vs ambiguous requiring review), and a primary "Run Pipeline Analysis" action button.
+  - Interactive 9-stage progression grid displaying real-time execution across:
+    1. Ingestion & Integrity
+    2. Schema Discovery
+    3. Data Quality & Quarantine
+    4. Capability Detection
+    5. Anomaly Detection
+    6. Predictive Modeling
+    7. Root-Cause Drivers
+    8. Recommendations & Counterfactuals
+    9. Action Guardrails & Alerts
+  - Integrated natural language stage explanations generated from structured logs and verified against immutable facts via `src/nlp/stage_explainer.py` with deterministic fallback.
+  - Rich interactive result views:
+    - **Deduplicated Anomalies Table**: Multiple detector triggers per record are consolidated, displaying multi-detector badges (`iqr`, `robust_zscore`, `isolation_forest`).
+    - **Demand Forecasting**: Rolling-origin forecast evaluation reporting both MAE and sMAPE, compared directly against the naive baseline.
+    - **Root-Cause Drivers**: Carrier $\times$ route interaction pairs, single-driver confounding check (`"explained by <driver>"`), strictly standardized `"contributing factor"` terminology (never `"cause"`), and human-reviewer confirmation gating (with explicit 403 Forbidden feedback for non-reviewers).
+    - **Hypothetical Recommendations**: Clearly marked counterfactuals with Approve/Reject actions and auditable rationale inputs.
+    - **Grouped Alerts**: Delivery status tracking (`dry-run`, `sent`, `failed`, `retrying`) across in-app, console, and webhook/telegram adapters.
+    - **Supply Network Summary**: Problem nodes with z-score baselines and degree metrics.
+    - **Model & Configuration Rollback**: One-click rollback to previous stable configuration or model checkpoint.
+- **Navigation & Architectural Preservation (`dashboard/src/App.tsx`, `api/main.py`)**:
+  - Set One-Page Prototype as default landing view (`screen === 'overview'`).
+  - Concealed secondary consoles behind a subtle "Show Advanced Views" toggle, preserving 100% of underlying backend modules and endpoints for auth, company isolation, audit logging, graph analytics, and model registry without deletion.
+- **Backend Enhancements**:
+  - `src/nlp/stage_explainer.py`: Stage explanation generator with number/entity factual integrity verification and deterministic template fallback.
+  - `src/data/schema_mapper.py`: Threshold-based schema mapping ambiguity categorization (`auto_accepted`, `needs_clarification`, `is_custom_field`).
+  - `src/ml/anomaly/canonical.py`: Record-level anomaly deduplication across detectors and weekly demand spike check.
+  - `src/ml/delay/canonical_demand.py`: sMAPE error calculation alongside MAE for candidate and baseline forecasts.
+  - `src/risk/drivers.py`: Driver interaction pairs, confounding check, and `"contributing factor"` wording.
+  - `src/connectors/notifications.py` & `src/alerts/manager.py`: Alert delivery status recording (`DRY_RUN`, `SENT`, `FAILED`, `RETRYING`).
+  - `api/main.py`: Synthesized 9-stage execution in `_execute_project_pipeline`, added `GET /projects/{project_id}/pipeline/runs/latest` and `GET /pipeline/runs/{run_id}` endpoints.
+- **Verification & Testing Results**:
+  - Full Pytest Regression Suite: **193 passed, 1 skipped, 0 failures** in 122.34s (`pytest tests/ -q --ignore=tests/test_e2e_acceptance_unseen.py`).
+  - Prototype Specific Test Suite (`tests/test_simplify_prototype.py`): **6 passed in 11.27s** (zip traversal rejection, excel non-tabular sheet skip, mapping ambiguity distinction, fact-checking integrity, alert delivery status, 403 permission enforcement).
+  - Frontend Build & Test Suite: `tsc -b && vite build` succeeded with 0 errors; Vitest passed **5 test files, 33 tests** in 6.76s.
+  - Real Datasets In-Memory Validation (`scripts/run_real_datasets.py`):
+    - Olist: 1,550,922 rows (1,292,106 valid, 258,816 quarantined) in 10.33s.
+    - DataCo: 180,519 rows (180,519 valid, 0 quarantined) in 48.96s.
+    - Online Retail II: 1,067,371 rows (1,055,238 valid, 12,133 quarantined) in 221.18s.
+  - Planted Fault Synthetic Evaluation: **Recall: 1.0000, Detection Delay: 0 days**.
+  - Browser Verification: Successfully navigated, verified, and captured screenshots and video recordings of the One Page Prototype via `browser_subagent`.
+
+
 ## Completed: Stage 5 generic incidents, drivers, risk and graph APIs
 
 - Read `AGENTS.md` and `docs/PROGRESS.md`. `docs/PRODUCT_SPEC.md` is absent from this workspace, so the requested Functionality 5/6/8 sections could not be checked; implementation follows the Stage 5 requirements in the user prompt.
@@ -499,7 +547,20 @@ Academic prototype supply-chain network visualizer delivering an aggregated inte
   - `npm run lint`: **0 errors, 0 warnings**.
   - `npm run typecheck`: **Clean (0 errors)**.
   - `npm test -- --run`: **5 test files passed, 33 tests passed** in 7.42s.
-  - `npm run build`: **Built production bundle in 16.71s** with 0 errors.
-  - `python -m pytest tests/test_stage10_scenarios.py -q`: **10 passed in 25.77s**.
+## Completed: One-Page Prototype Pipeline Execution & Mapping Approval Fix
+
+- **Execution Date**: 2026-10-25
+- **Issue Addressed**: Pipeline execution returned `409 Conflict: "Approve at least one mapping before executing pipeline"`.
+- **Root Causes Diagnosed & Resolved**:
+  1. **Asynchronous Ingestion Profiling Gap**: `POST /datasets/upload` dispatches profiling as a background job. The frontend previously made a single immediate call to `GET /datasets/{name}/suggestions` which returned `409 Conflict` (profiling incomplete) and was silently caught, leaving `mappingReport` null. Fixed by implementing `fetchSuggestionsWithRetry()` in [OnePagePrototype.tsx](file:///c:/Projects/supply-chain-risk-system/dashboard/src/components/OnePagePrototype.tsx) to poll with retry until profiling completes.
+  2. **Schema Mapper Column Name Keying**: `ColumnRoleSuggestion` in `src/data/schema_mapper.py` serializes as `column_name`, whereas [types.ts](file:///c:/Projects/supply-chain-risk-system/dashboard/src/api/types.ts) typed `column`. Added `column_name?: string` and updated frontend references to `s.column_name || s.column`, ensuring columns are correctly keyed in `editedMappings`.
+  3. **Canonical Role Alignment**: Aligned the dropdown options to valid canonical roles (`order_id`, `order_ts`, `promised_ts`, `delivered_ts`, `carrier`, `supplier_id`, `product_id`, `quantity`, `price`, `status`, `route`, `region`) matching `src/data/profile.py`.
+  4. **Seamless Auto-Approval on Pipeline Run**: In accordance with user workflow rules (user reviews ambiguous mappings only; confident mappings are auto-accepted), clicking "Run Analysis" automatically validates and approves all confident canonical mappings before initiating pipeline execution (`PUT /datasets/{name}/confirm-mapping`).
+  5. **Multi-Tenant / Project Scoping**: Updated `POST /datasets/upload` to associate uploaded sources with the active `project_id`, and added fallback in `_project_capability_report()`, `run_project_pipeline_endpoint()`, and `_execute_project_pipeline()` in [api/main.py](file:///c:/Projects/supply-chain-risk-system/api/main.py) to resolve tenant-level sources when direct project mapping is absent.
+  6. **Defensive Stage Rendering**: Added default stage definitions and sanitized stage mappings to protect against any missing properties during live results rendering.
+- **Verification**:
+  - `npm run build`: Built production bundle in 14.72s with **0 errors**.
+  - `python -m pytest tests/test_simplify_prototype.py tests/test_system_upgrades_security.py -q`: **13 passed in 32.99s**.
+  - **Browser E2E Execution**: Uploaded `sample_supply_chain_orders.csv`, confirmed schema suggestions, clicked "Run Analysis", and observed complete execution of all 9 stages to `COMPLETED` status with green success banner and verified results across Anomalies, Predictions, and Drivers tabs without errors.
 
 

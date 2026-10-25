@@ -99,11 +99,30 @@ class AlertManager:
         self._seen[identity] = {"first_seen": first_seen, "last_seen": now, "group_id": group_id, "duplicate_count": 0}
         self._seen[identity].update({"status": "OPEN", "assigned_to": None})
         routes = self.settings["severity_routes"].get(routed_severity, [])
+        delivery_results = []
         for channel_name in routes:
             channel = self.channels.get(channel_name)
             if channel is not None:
-                channel.send(payload)
-        event = {"event": "alert_routed", **payload, "routes": routes}
+                try:
+                    res = channel.send(payload)
+                    delivery_results.append(res if isinstance(res, dict) else {"status": "SENT", "channel": channel_name})
+                except Exception as exc:
+                    delivery_results.append({"status": "FAILED", "channel": channel_name, "error": str(exc)})
+
+        if not delivery_results:
+            delivery_status = "DRY_RUN"
+        elif any(r.get("status") == "SENT" for r in delivery_results):
+            delivery_status = "SENT"
+        elif any(r.get("status") == "RETRYING" for r in delivery_results):
+            delivery_status = "RETRYING"
+        elif any(r.get("status") == "FAILED" for r in delivery_results):
+            delivery_status = "FAILED"
+        else:
+            delivery_status = "DRY_RUN"
+
+        payload["delivery_status"] = delivery_status
+        payload["delivery_results"] = delivery_results
+        event = {"event": "alert_routed", **payload, "routes": routes, "delivery_status": delivery_status}
         self._append_history(event)
         return event
 

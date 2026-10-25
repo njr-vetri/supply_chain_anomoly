@@ -30,7 +30,7 @@ mlruns/
 __pycache__/
 *.py[cod]
 .pytest_cache/
-.pytest_tmp/
+.pytest_tmp*
 .mypy_cache/
 .ruff_cache/
 .pre-commit-cache/

@@ -1,0 +1,45 @@
+name: sample_supply_chain_orders
+version: v0008
+description: Reviewer confirmed column mappings on Prototype page
+source_file: e0b091d6c87396c661e3da01d91cb617e4ce6589e5cad8fab84ff56854c8186b_sample_supply_chain_orders.csv
+source_archive_sha256: e0b091d6c87396c661e3da01d91cb617e4ce6589e5cad8fab84ff56854c8186b
+created_at: '2026-10-25T15:14:10.336068Z'
+updated_at: '2026-10-25T15:14:10.336074Z'
+mappings:
+  order_id: order_id
+  order_date: order_ts
+  promised_date: promised_ts
+  delivered_date: delivered_ts
+  supplier_id: supplier_id
+  product_id: product_id
+  carrier: carrier
+  route: route
+  region: region
+  transit_corridor: route
+  quantity: quantity
+  unit_price: price
+custom_fields: {}
+units: {}
+time_zone: null
+date_format: null
+capabilities:
+  anomaly_detection:
+    task: anomaly_detection
+    possible: true
+    missing_roles: []
+    reason: Order ID and metric/timeline values present
+  delay_prediction:
+    task: delay_prediction
+    possible: true
+    missing_roles: []
+    reason: Promised timestamp and delivery outcome present
+  demand_forecasting:
+    task: demand_forecasting
+    possible: true
+    missing_roles: []
+    reason: Product ID, order quantity, and timestamps present
+  graph:
+    task: graph
+    possible: true
+    missing_roles: []
+    reason: Order ID and network entity present

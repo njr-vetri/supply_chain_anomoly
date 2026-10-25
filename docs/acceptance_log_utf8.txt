@@ -1,0 +1,8 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.13.7, pytest-9.1.1, pluggy-1.7.0 -- C:\Projects\supply-chain-risk-system\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Projects\supply-chain-risk-system
+configfile: pyproject.toml
+plugins: anyio-4.15.1, platformdirs-4.13.5
+collecting ... collected 1 item
+

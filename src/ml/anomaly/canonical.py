@@ -222,13 +222,46 @@ def detect_canonical_anomalies(records: list[dict[str, Any]], settings: Any) -> 
                         "seasonal_baseline_used": False,
                     })
 
-    # Rank anomalies by severity descending, then score descending
+    # Deduplicate anomalies per record
+    dedup_map: dict[tuple[tuple[str, ...], str], dict[str, Any]] = {}
     sev_rank = {"CRITICAL": 3, "HIGH": 2, "LOW": 1}
+
+    for item in output:
+        refs_tuple = tuple(sorted(str(r) for r in item.get("record_refs", [])))
+        metric_key = str(item.get("metric", ""))
+        key = (refs_tuple, metric_key)
+
+        if key not in dedup_map:
+            new_item = dict(item)
+            new_item["detectors"] = [item.get("method", "detector")]
+            dedup_map[key] = new_item
+        else:
+            existing = dedup_map[key]
+            m = item.get("method", "detector")
+            if "detectors" not in existing:
+                existing["detectors"] = [existing.get("method", "detector")]
+            if m not in existing["detectors"]:
+                existing["detectors"].append(m)
+            # Retain the highest severity and highest detector score
+            cur_sev = sev_rank.get(str(item.get("severity", "LOW")).upper(), 0)
+            ex_sev = sev_rank.get(str(existing.get("severity", "LOW")).upper(), 0)
+            cur_score = float(item.get("score") or 0.0)
+            ex_score = float(existing.get("score") or 0.0)
+            if (cur_sev > ex_sev) or (cur_sev == ex_sev and cur_score > ex_score):
+                existing["severity"] = item.get("severity")
+                existing["score"] = cur_score
+                existing["method"] = item.get("method")
+                existing["baseline"] = item.get("baseline")
+                existing["expected_range"] = item.get("expected_range")
+
+    deduped_output = list(dedup_map.values())
+
+    # Rank anomalies by severity descending, then score descending
     def rank_key(a: dict[str, Any]) -> tuple[int, float]:
         s_val = sev_rank.get(str(a.get("severity", "LOW")).upper(), 0)
         return (s_val, float(a.get("score") or 0.0))
 
-    sorted_output = sorted(output, key=rank_key, reverse=True)
+    sorted_output = sorted(deduped_output, key=rank_key, reverse=True)
     total_anomalies = len(sorted_output)
     cap = 2000
     is_capped = total_anomalies > cap

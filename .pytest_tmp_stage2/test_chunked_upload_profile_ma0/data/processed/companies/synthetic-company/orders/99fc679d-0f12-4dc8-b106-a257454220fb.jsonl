@@ -1,2 +1,0 @@
-{"order_id": "O-1", "event_timestamp": "2026-01-01", "event_id": "O-1", "source": "orders", "source_record_ref": "99fc679d-0f12-4dc8-b106-a257454220fb:0", "custom_fields": {"vendor_ref": "V-1"}}
-{"order_id": "O-2", "event_timestamp": "2026-01-02", "event_id": "O-2", "source": "orders", "source_record_ref": "99fc679d-0f12-4dc8-b106-a257454220fb:1", "custom_fields": {"vendor_ref": "V-2"}}

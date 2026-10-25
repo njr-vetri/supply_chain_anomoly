@@ -59,6 +59,18 @@ export interface ImportJob {
   processed_rows?: number | null; total_rows?: number | null
   sha256?: string | null; dataset_name?: string | null
   error?: string | null; created_at?: string | null
+  is_multi_table?: boolean
+  table_count?: number
+  tables?: Array<{
+    dataset_name: string
+    filename: string
+    size_bytes: number
+    sha256: string
+    source_id?: string
+    dataset_version_id?: string
+    import_job_id?: string
+    status?: string
+  }>
 }
 
 export interface MappingVersion {
@@ -69,8 +81,19 @@ export interface MappingVersion {
 }
 
 export interface MappingSuggestion {
-  column: string; suggested_role: string | null; confidence: number
+  column?: string; column_name?: string
+  suggested_role: string | null; confidence: number
   reason: string; needs_clarification?: boolean
+  auto_accepted?: boolean; is_custom_field?: boolean
+}
+
+export interface MappingSuggestionReport {
+  dataset_name: string
+  suggestions: MappingSuggestion[]
+  auto_accepted_mappings?: Record<string, string>
+  ambiguous_columns?: string[]
+  unmapped_columns?: string[]
+  capabilities?: CapabilityResult[]
 }
 
 export interface CapabilityResult {
@@ -325,5 +348,32 @@ export interface AggregatedTraceResponse {
   path_edges: AggregatedGraphEdge[]
   node_count: number
   disclaimer: string
+}
+
+export interface PipelineStageInfo {
+  name: string
+  status: 'PENDING' | 'RUNNING' | 'COMPLETED' | 'SKIPPED' | 'FAILED'
+  duration_seconds: number
+  input_rows: number
+  output_rows: number
+  warnings: string[]
+  counts: Record<string, number>
+  details: Record<string, unknown>
+  explanation: string
+  insufficient_evidence?: boolean
+}
+
+export interface PipelineRunDetail {
+  id: string
+  project_id: string
+  status: string
+  nine_stages?: PipelineStageInfo[]
+  stages?: PipelineStageInfo[]
+  steps?: Array<Record<string, unknown>>
+  result?: {
+    status?: string
+    nine_stages?: PipelineStageInfo[]
+    steps?: Array<Record<string, unknown>>
+  }
 }
 
