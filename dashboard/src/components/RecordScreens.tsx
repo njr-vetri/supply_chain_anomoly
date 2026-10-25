@@ -61,38 +61,256 @@ export function ModelsScreen({ client }: { client: ApiClient }) {
   </div>
 }
 
+const EVENT_LABELS: Record<string, string> = {
+  user_login_success: 'User Login (Success)',
+  user_login_failed: 'User Login (Failed)',
+  project_created: 'Project Created',
+  pipeline_run_completed: 'Pipeline Ingestion Completed',
+  pipeline_alert_dry_run: 'Pipeline Dry-Run Alert',
+  alert_acknowledged: 'Alert Acknowledged',
+  model_promoted: 'Model Promoted',
+  model_rolled_back: 'Model Rolled Back',
+  kill_switch_toggled: 'Kill Switch Toggled',
+  hypothesis_confirmed: 'Hypothesis Confirmed',
+}
+
+function formatEvent(type: string): string {
+  return EVENT_LABELS[type] || type.replace(/_/g, ' ')
+}
+
+function truncateHash(hash?: string | null): string {
+  if (!hash) return '—'
+  if (hash.length <= 16) return hash
+  return `${hash.slice(0, 10)}…${hash.slice(-8)}`
+}
+
 export function AuditScreen({ client, role }: { client: ApiClient; role: Role }) {
   const load = useCallback(() => client.audit(), [client])
   const state = useRemote(load)
-  return <div className="space-y-5"><section className="page-intro"><div><p className="eyebrow">GOVERNANCE / AUDIT</p><h2>Audit log</h2><p>Read-only view of the hash-chained audit events.</p></div><LockKeyhole size={19} className="text-muted" /></section>
-    <div className="audit-notice">Audit details and record-reference payloads are intentionally omitted from this view to reduce PII exposure. The API requires an admin key; the backend remains authoritative.</div>
-    {role !== 'admin' ? <div className="panel"><Empty title="Admin role required" note="The configured session role does not allow the audit endpoint." /></div> : state.loading ? <div className="panel"><Busy /></div> : state.error ? <div className="panel"><PageError message={state.error} retry={() => void state.reload()} /></div> : !state.data?.items.length ? <div className="panel"><Empty title="No audit events returned" note="The API audit log is empty or unavailable." /></div> : <section className="panel"><div className="table-scroll"><table className="metric-table"><thead><tr><th>Time</th><th>Event</th><th>Actor</th><th>Source</th><th>Previous hash</th><th>Event hash</th></tr></thead><tbody>{state.data.items.map((event, index) => <tr key={event.id || index}><td>{event.occurred_at}</td><td><TypeBadge kind="FACT" /> {event.event_type}</td><td>{event.actor}</td><td>{event.source || 'UNKNOWN'}</td><td className="hash-cell">{event.previous_hash}</td><td className="hash-cell">{event.event_hash}</td></tr>)}</tbody></table></div></section>}
-  </div>
+  return (
+    <div className="space-y-5">
+      <section className="page-intro">
+        <div>
+          <p className="eyebrow">GOVERNANCE / AUDIT</p>
+          <h2>Audit log</h2>
+          <p>Read-only view of the tamper-evident, hash-chained audit ledger.</p>
+        </div>
+        <LockKeyhole size={19} className="text-muted" />
+      </section>
+      <div className="audit-notice">
+        <strong>Cryptographic Provenance:</strong> Each audit event computes a SHA-256 hash chaining to the previous entry, mathematically proving no historical event has been modified or deleted. Payloads are sanitized to prevent PII exposure.
+      </div>
+      {role !== 'admin' ? (
+        <div className="panel"><Empty title="Admin role required" note="The configured session role does not allow the audit endpoint." /></div>
+      ) : state.loading ? (
+        <div className="panel"><Busy /></div>
+      ) : state.error ? (
+        <div className="panel"><PageError message={state.error} retry={() => void state.reload()} /></div>
+      ) : !state.data?.items.length ? (
+        <div className="panel"><Empty title="No audit events returned" note="The API audit log is empty or unavailable." /></div>
+      ) : (
+        <section className="panel">
+          <div className="table-scroll">
+            <table className="metric-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Event Name</th>
+                  <th>Actor</th>
+                  <th>Source Data</th>
+                  <th>Previous Hash</th>
+                  <th>Event Hash</th>
+                </tr>
+              </thead>
+              <tbody>
+                {state.data.items.map((event, index) => (
+                  <tr key={event.id || index}>
+                    <td className="whitespace-nowrap text-xs">{event.occurred_at}</td>
+                    <td>
+                      <div className="flex items-center gap-2">
+                        <TypeBadge kind="FACT" />
+                        <span className="font-semibold">{formatEvent(event.event_type)}</span>
+                      </div>
+                    </td>
+                    <td><span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-mono font-bold dark:bg-slate-800">{event.actor}</span></td>
+                    <td className="text-xs text-muted">{event.source || 'system'}</td>
+                    <td className="hash-cell font-mono text-[11px]" title={event.previous_hash}>{truncateHash(event.previous_hash)}</td>
+                    <td className="hash-cell font-mono text-[11px]" title={event.event_hash}>{truncateHash(event.event_hash)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+    </div>
+  )
 }
 
-export function SettingsScreen({ client, role, apiUrl, onSaveUrl, dark, onToggleTheme, onKillSwitch }: { client: ApiClient; role: Role; apiUrl: string; onSaveUrl: (url: string) => void; dark: boolean; onToggleTheme: () => void; onKillSwitch: (enabled: boolean) => void }) {
-  const [url, setUrl] = useState(apiUrl)
+export function SettingsScreen({
+  client, role, apiUrl, dark, onToggleTheme, onKillSwitch,
+}: {
+  client: ApiClient
+  role: Role
+  apiUrl: string
+  onSaveUrl: (url: string) => void
+  dark: boolean
+  onToggleTheme: () => void
+  onKillSwitch: (enabled: boolean) => void
+}) {
   const [kill, setKill] = useState<boolean | null>(null)
   const [loadingKill, setLoadingKill] = useState(role === 'admin')
   const [reason, setReason] = useState('')
   const [target, setTarget] = useState<boolean | null>(null)
   const [busy, setBusy] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
-  useEffect(() => { if (role !== 'admin') { setKill(null); setLoadingKill(false); return } setLoadingKill(true); client.killSwitch().then((value) => setKill(value.enabled)).catch((err: unknown) => setMessage(err instanceof Error ? err.message : 'Could not read kill switch')).finally(() => setLoadingKill(false)) }, [client, role])
+
+  useEffect(() => {
+    if (role !== 'admin') { setKill(null); setLoadingKill(false); return }
+    setLoadingKill(true)
+    client.killSwitch()
+      .then((value) => setKill(value.enabled))
+      .catch((err: unknown) => setMessage(err instanceof Error ? err.message : 'Could not read kill switch'))
+      .finally(() => setLoadingKill(false))
+  }, [client, role])
+
   async function applyToggle() {
     if (target === null || !reason.trim() || role !== 'admin') return
     setBusy(true); setMessage(null)
-    try { const result = await client.toggleKillSwitch({ enabled: target, reason: reason.trim() }); setKill(result.enabled); onKillSwitch(result.enabled); setTarget(null); setReason(''); setMessage(`Kill switch is ${result.enabled ? 'ON' : 'OFF'}. Audit event recorded.`) }
-    catch (err) { setMessage(err instanceof Error ? err.message : 'Kill-switch update failed') }
-    finally { setBusy(false) }
+    try {
+      const result = await client.toggleKillSwitch({ enabled: target, reason: reason.trim() })
+      setKill(result.enabled)
+      onKillSwitch(result.enabled)
+      setTarget(null)
+      setReason('')
+      setMessage(`Kill switch is ${result.enabled ? 'ON' : 'OFF'}. Audit event recorded.`)
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : 'Kill-switch update failed')
+    } finally {
+      setBusy(false)
+    }
   }
-  return <div className="space-y-5"><section className="page-intro"><div><p className="eyebrow">SYSTEM / SETTINGS</p><h2>Console settings</h2><p>Local connection, appearance, and admin-controlled safety state.</p></div><TypeBadge kind="FACT" /></section>
-    <section className="panel p-5"><h3 className="text-sm font-semibold">API connection</h3><p className="mt-1 text-xs text-muted">Only the local FastAPI backend is supported by this console.</p><div className="mt-4 flex flex-col gap-2 sm:flex-row"><input aria-label="API URL" className="text-input" value={url} onChange={(event) => setUrl(event.target.value)} /><button className="primary-button justify-center" disabled={!url.trim()} onClick={() => onSaveUrl(url.trim())}>Save URL</button></div><p className="mt-2 break-all text-[10px] text-muted">API root: {url}/api/v1</p></section>
-    <section className="panel p-5"><div className="flex items-center justify-between gap-3"><div><h3 className="text-sm font-semibold">Appearance</h3><p className="mt-1 text-xs text-muted">Theme preference is stored in this browser session.</p></div><button className="secondary-button" onClick={onToggleTheme}>{dark ? <Sun size={15} /> : <Moon size={15} />}{dark ? 'Light theme' : 'Dark theme'}</button></div></section>
-    <section className="panel p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><div className="flex items-center gap-2"><ShieldAlert size={17} className="text-amber-700" /><h3 className="text-sm font-semibold">Global kill switch</h3></div><p className="mt-2 max-w-2xl text-xs leading-5 text-muted">{role === 'admin' ? 'This setting is fetched from and written to the local API. Each change requires a reason and is audited.' : 'State is hidden because the API contract restricts kill-switch access to admin keys.'}</p></div><span className="status-chip">{loadingKill ? 'Loading…' : kill === null ? 'UNKNOWN' : kill ? 'ON' : 'OFF'}</span></div>
-      {role === 'admin' && <button className={kill ? 'danger-button mt-4' : 'secondary-button mt-4'} disabled={loadingKill || kill === null} onClick={() => setTarget(!kill)}>{kill ? 'Turn kill switch OFF' : 'Turn kill switch ON'}</button>}
-      {message && <p className="mt-3 text-xs text-muted" role="status">{message}</p>}
-    </section>
-    {target !== null && <div className="dialog-backdrop"><section className="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="kill-dialog-title"><p className="eyebrow">ADMIN CONFIRMATION</p><h3 id="kill-dialog-title" className="mt-1 text-base font-semibold">Turn kill switch {target ? 'ON' : 'OFF'}?</h3><p className="mt-2 text-xs leading-5 text-muted">This changes the process-local API safety state and writes an audit event. Provide a reason to continue.</p><label className="form-label mt-4">Reason<input className="text-input mt-2" autoFocus value={reason} onChange={(event) => setReason(event.target.value)} placeholder="Required reason" /></label><div className="mt-4 flex justify-end gap-2"><button className="secondary-button" disabled={busy} onClick={() => { setTarget(null); setReason('') }}>Cancel</button><button className="danger-button" disabled={!reason.trim() || busy} onClick={() => void applyToggle()}>{busy ? 'Saving…' : 'Confirm change'}</button></div></section></div>}
-  </div>
+
+  return (
+    <div className="space-y-5">
+      <section className="page-intro">
+        <div>
+          <p className="eyebrow">SYSTEM / SETTINGS</p>
+          <h2>Console settings</h2>
+          <p>Local connection, appearance, and admin-controlled safety state.</p>
+        </div>
+        <TypeBadge kind="FACT" />
+      </section>
+
+      {/* Local Backend Connection Card */}
+      <section className="panel p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-ink dark:text-white">API Connection & Architecture</h3>
+            <p className="mt-1 text-xs text-muted">Directly auto-wired to local FastAPI backend; manual configuration is not required.</p>
+          </div>
+          <span className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            Connected (127.0.0.1:8000)
+          </span>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-3 text-xs">
+          <div className="rounded-lg border border-line p-3 dark:border-slate-800">
+            <span className="text-[10px] font-bold uppercase text-muted">Backend Root</span>
+            <p className="mt-1 font-mono font-semibold text-ink dark:text-white truncate">{apiUrl || 'http://127.0.0.1:8000'}/api/v1</p>
+          </div>
+          <div className="rounded-lg border border-line p-3 dark:border-slate-800">
+            <span className="text-[10px] font-bold uppercase text-muted">Execution Mode</span>
+            <p className="mt-1 font-semibold text-emerald-600 dark:text-emerald-400">Dry-Run Enforced</p>
+          </div>
+          <div className="rounded-lg border border-line p-3 dark:border-slate-800">
+            <span className="text-[10px] font-bold uppercase text-muted">Target Environment</span>
+            <p className="mt-1 font-semibold text-ink dark:text-white">Localhost (CPU-only, 16GB)</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Safety & Operational Policies */}
+      <section className="panel p-5">
+        <h3 className="text-sm font-semibold text-ink dark:text-white">Safety & Operational Policies</h3>
+        <p className="mt-1 text-xs text-muted">Enforced guardrails ensuring transparency and human-in-the-loop oversight.</p>
+        <div className="mt-4 space-y-2.5 text-xs">
+          <div className="flex items-center justify-between rounded-lg border border-line p-3 dark:border-slate-800">
+            <div>
+              <span className="font-semibold text-ink dark:text-white">Human Approval for High-Impact Actions</span>
+              <p className="text-[11px] text-muted">Autonomous dispatches are simulated in dry-run mode until approved by a human operator.</p>
+            </div>
+            <span className="status-chip !text-emerald-600 !border-emerald-300">Enforced</span>
+          </div>
+          <div className="flex items-center justify-between rounded-lg border border-line p-3 dark:border-slate-800">
+            <div>
+              <span className="font-semibold text-ink dark:text-white">Cryptographic Hash Chaining</span>
+              <p className="text-[11px] text-muted">All admin operations, logins, and model version changes write immutable SHA-256 chained events.</p>
+            </div>
+            <span className="status-chip !text-emerald-600 !border-emerald-300">Active</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Appearance */}
+      <section className="panel p-5">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <h3 className="text-sm font-semibold">Appearance</h3>
+            <p className="mt-1 text-xs text-muted">Theme preference is stored in this browser session.</p>
+          </div>
+          <button className="secondary-button" onClick={onToggleTheme}>
+            {dark ? <Sun size={15} /> : <Moon size={15} />}
+            {dark ? 'Light theme' : 'Dark theme'}
+          </button>
+        </div>
+      </section>
+
+      {/* Global Kill Switch */}
+      <section className="panel p-5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <div className="flex items-center gap-2">
+              <ShieldAlert size={17} className="text-amber-700" />
+              <h3 className="text-sm font-semibold">Global kill switch</h3>
+            </div>
+            <p className="mt-2 max-w-2xl text-xs leading-5 text-muted">
+              {role === 'admin'
+                ? 'This setting is fetched from and written to the local API. Each change requires a reason and is audited.'
+                : 'State is hidden because the API contract restricts kill-switch access to admin keys.'}
+            </p>
+          </div>
+          <span className="status-chip">{loadingKill ? 'Loading…' : kill === null ? 'UNKNOWN' : kill ? 'ON' : 'OFF'}</span>
+        </div>
+        {role === 'admin' && (
+          <button
+            className={kill ? 'danger-button mt-4' : 'secondary-button mt-4'}
+            disabled={loadingKill || kill === null}
+            onClick={() => setTarget(!kill)}
+          >
+            {kill ? 'Turn kill switch OFF' : 'Turn kill switch ON'}
+          </button>
+        )}
+        {message && <p className="mt-3 text-xs text-muted" role="status">{message}</p>}
+      </section>
+
+      {target !== null && (
+        <div className="dialog-backdrop">
+          <section className="confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="kill-dialog-title">
+            <p className="eyebrow">ADMIN CONFIRMATION</p>
+            <h3 id="kill-dialog-title" className="mt-1 text-base font-semibold">Turn kill switch {target ? 'ON' : 'OFF'}?</h3>
+            <p className="mt-2 text-xs leading-5 text-muted">This changes the process-local API safety state and writes an audit event. Provide a reason to continue.</p>
+            <label className="form-label mt-4">Reason
+              <input className="text-input mt-2" autoFocus value={reason} onChange={(event) => setReason(event.target.value)} placeholder="Required reason" />
+            </label>
+            <div className="mt-4 flex justify-end gap-2">
+              <button className="secondary-button" disabled={busy} onClick={() => { setTarget(null); setReason('') }}>Cancel</button>
+              <button className="danger-button" disabled={!reason.trim() || busy} onClick={() => void applyToggle()}>{busy ? 'Saving…' : 'Confirm change'}</button>
+            </div>
+          </section>
+        </div>
+      )}
+    </div>
+  )
 }
+

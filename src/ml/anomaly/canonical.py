@@ -91,6 +91,19 @@ def detect_canonical_anomalies(records: list[dict[str, Any]], settings: Any) -> 
                 sev_crit = float(spec.get("severity_critical", 6))
                 sev_high = float(spec.get("severity_high", 3))
 
+                iso_preds = None
+                iso_scores = None
+                if isolation_model is not None:
+                    valid_mask = ~np.isnan(vals)
+                    if valid_mask.any():
+                        valid_vals = vals[valid_mask].reshape(-1, 1)
+                        raw_preds = isolation_model.predict(valid_vals)
+                        raw_scores = -isolation_model.score_samples(valid_vals)
+                        iso_preds = np.zeros(len(vals), dtype=bool)
+                        iso_scores = np.zeros(len(vals), dtype=float)
+                        iso_preds[valid_mask] = (raw_preds == -1)
+                        iso_scores[valid_mask] = raw_scores
+
                 for position in range(len(vals)):
                     value = vals[position]
                     if np.isnan(value):
@@ -123,12 +136,11 @@ def detect_canonical_anomalies(records: list[dict[str, Any]], settings: Any) -> 
                         "iqr": (value < lower or value > upper,
                                 median, max(lower - value, value - upper, 0.0)),
                     }
-                    if isolation_model is not None and position >= settings.minimum_baseline_records:
-                        pt = np.array([[value]])
+                    if isolation_model is not None and position >= settings.minimum_baseline_records and iso_preds is not None:
                         # Isolation Forest assigns individual sample anomaly score to each record
                         methods["isolation_forest"] = (
-                            bool(isolation_model.predict(pt)[0] == -1),
-                            median, float(-isolation_model.score_samples(pt)[0]),
+                            bool(iso_preds[position]),
+                            median, float(iso_scores[position]),
                         )
 
                     severity_score = max(

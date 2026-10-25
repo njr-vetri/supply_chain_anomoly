@@ -40,9 +40,9 @@
     "mappings": "CONFIRMED_BY_ANALYST",
     "relationship_preview": [
       {
-        "left_source_id": "af2a0700-6b0d-4a02-8298-12ddcec27503",
+        "left_source_id": "4021753c-14bf-4ca8-bfbc-22160415a297",
         "left_key": "po_number",
-        "right_source_id": "c88533ed-cfb5-48c3-b8cf-b2ac2b8631ca",
+        "right_source_id": "ea462390-9b1e-4f8f-b4b4-93b66e5b63ac",
         "right_key": "po_number",
         "relationship": "order_shipment",
         "matched_left_rows": 6030,
@@ -53,9 +53,9 @@
         "invalid_right_references": 0
       },
       {
-        "left_source_id": "af2a0700-6b0d-4a02-8298-12ddcec27503",
+        "left_source_id": "4021753c-14bf-4ca8-bfbc-22160415a297",
         "left_key": "vendor_code",
-        "right_source_id": "1eeba1fb-ac16-447a-93af-0bdb67cf98f9",
+        "right_source_id": "4d7803f5-085f-48af-9604-c05a68131bb5",
         "right_key": "vendor_code",
         "relationship": "supplier_order",
         "matched_left_rows": 6020,
@@ -68,7 +68,7 @@
     ],
     "relationship_approval": "APPROVED_BY_ANALYST",
     "pipeline_run": {
-      "id": "7d459ea9-c76d-4d8b-9e7e-c7c8d0eadd8b",
+      "id": "27d019fa-c9d3-4d8b-a1b8-e4641f1b4914",
       "status": "COMPLETED"
     }
   },
@@ -240,7 +240,7 @@
         "product_id"
       ],
       "record_refs": [
-        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:149"
+        "32750624-bd61-4a9e-b4b1-3be771c6f6cd:149"
       ],
       "metric": "quantity",
       "observed_value": 7480,
@@ -259,11 +259,11 @@
         "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
       ],
       "seasonal_baseline_used": 0,
-      "id": "95428153-fff7-4739-83cc-ffe5c8d2ec13",
-      "created_at": "2026-10-24T17:16:20.779906",
+      "id": "7bca5da7-a6a8-4118-a5bc-5e67bc54b522",
+      "created_at": "2026-10-25T10:16:52.966635",
       "source": "canonical_pipeline",
       "detector": "rule",
-      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:149",
+      "record_ref": "32750624-bd61-4a9e-b4b1-3be771c6f6cd:149",
       "feature": "quantity"
     },
     {
@@ -274,7 +274,7 @@
         "product_id"
       ],
       "record_refs": [
-        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:149"
+        "32750624-bd61-4a9e-b4b1-3be771c6f6cd:149"
       ],
       "metric": "quantity",
       "observed_value": 7480,
@@ -293,11 +293,11 @@
         "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
       ],
       "seasonal_baseline_used": 0,
-      "id": "b513a708-efc2-40f7-8c24-73498fdd46c7",
-      "created_at": "2026-10-24T17:16:20.787205",
+      "id": "d06d8a7b-9922-462a-bc97-73cdc6d2c35f",
+      "created_at": "2026-10-25T10:16:52.974570",
       "source": "canonical_pipeline",
       "detector": "iqr",
-      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:149",
+      "record_ref": "32750624-bd61-4a9e-b4b1-3be771c6f6cd:149",
       "feature": "quantity"
     },
     {
@@ -308,7 +308,7 @@
         "product_id"
       ],
       "record_refs": [
-        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554"
+        "32750624-bd61-4a9e-b4b1-3be771c6f6cd:1554"
       ],
       "metric": "quantity",
       "observed_value": 7120,
@@ -327,11 +327,11 @@
         "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
       ],
       "seasonal_baseline_used": 0,
-      "id": "1af9eeda-1145-4eb8-952f-a31d5d72b51f",
-      "created_at": "2026-10-24T17:16:20.793383",
+      "id": "969d501a-0816-4efc-922a-0b5ce81b4023",
+      "created_at": "2026-10-25T10:16:52.982045",
       "source": "canonical_pipeline",
       "detector": "rule",
-      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554",
+      "record_ref": "32750624-bd61-4a9e-b4b1-3be771c6f6cd:1554",
       "feature": "quantity"
     },
     {
@@ -342,7 +342,7 @@
         "product_id"
       ],
       "record_refs": [
-        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554"
+        "32750624-bd61-4a9e-b4b1-3be771c6f6cd:1554"
       ],
       "metric": "quantity",
       "observed_value": 7120,
@@ -361,11 +361,11 @@
         "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
       ],
       "seasonal_baseline_used": 0,
-      "id": "acd5858f-e5c2-4fd8-b0a2-9f6aab22260d",
-      "created_at": "2026-10-24T17:16:20.799582",
+      "id": "ef13aa23-b781-49f2-99ca-2a7333c054ed",
+      "created_at": "2026-10-25T10:16:52.989150",
       "source": "canonical_pipeline",
       "detector": "iqr",
-      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554",
+      "record_ref": "32750624-bd61-4a9e-b4b1-3be771c6f6cd:1554",
       "feature": "quantity"
     },
     {
@@ -376,7 +376,7 @@
         "supplier_id"
       ],
       "record_refs": [
-        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554"
+        "32750624-bd61-4a9e-b4b1-3be771c6f6cd:1554"
       ],
       "metric": "quantity",
       "observed_value": 7120,
@@ -395,11 +395,11 @@
         "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
       ],
       "seasonal_baseline_used": 0,
-      "id": "dffcfdeb-f747-459f-b3c8-0f0bb4669bdd",
-      "created_at": "2026-10-24T17:16:20.806558",
+      "id": "a755ebc4-1845-496a-9e70-8490720769cc",
+      "created_at": "2026-10-25T10:16:52.997307",
       "source": "canonical_pipeline",
       "detector": "rule",
-      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554",
+      "record_ref": "32750624-bd61-4a9e-b4b1-3be771c6f6cd:1554",
       "feature": "quantity"
     },
     {
@@ -410,7 +410,7 @@
         "supplier_id"
       ],
       "record_refs": [
-        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554"
+        "32750624-bd61-4a9e-b4b1-3be771c6f6cd:1554"
       ],
       "metric": "quantity",
       "observed_value": 7120,
@@ -429,11 +429,11 @@
         "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
       ],
       "seasonal_baseline_used": 0,
-      "id": "5452a051-9bc6-4977-ace8-1bd67191185f",
-      "created_at": "2026-10-24T17:16:20.813998",
+      "id": "91bfe963-499b-4148-a06a-706c8d1716dd",
+      "created_at": "2026-10-25T10:16:53.005078",
       "source": "canonical_pipeline",
       "detector": "iqr",
-      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554",
+      "record_ref": "32750624-bd61-4a9e-b4b1-3be771c6f6cd:1554",
       "feature": "quantity"
     },
     {
@@ -444,7 +444,7 @@
         "product_id"
       ],
       "record_refs": [
-        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727"
+        "32750624-bd61-4a9e-b4b1-3be771c6f6cd:5727"
       ],
       "metric": "quantity",
       "observed_value": 5360,
@@ -463,11 +463,11 @@
         "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
       ],
       "seasonal_baseline_used": 0,
-      "id": "1ae96c9d-beaf-49e1-a5c0-9c392871968f",
-      "created_at": "2026-10-24T17:16:20.821755",
+      "id": "83ed2ed6-8ce7-4a70-b263-a70bd016c7e8",
+      "created_at": "2026-10-25T10:16:53.012145",
       "source": "canonical_pipeline",
       "detector": "rule",
-      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727",
+      "record_ref": "32750624-bd61-4a9e-b4b1-3be771c6f6cd:5727",
       "feature": "quantity"
     },
     {
@@ -478,7 +478,7 @@
         "product_id"
       ],
       "record_refs": [
-        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727"
+        "32750624-bd61-4a9e-b4b1-3be771c6f6cd:5727"
       ],
       "metric": "quantity",
       "observed_value": 5360,
@@ -497,11 +497,11 @@
         "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
       ],
       "seasonal_baseline_used": 0,
-      "id": "66ad4e53-5988-4e87-89a3-8d998a760ae8",
-      "created_at": "2026-10-24T17:16:20.829709",
+      "id": "acedc472-afb3-4cd0-b1fc-bac1fd2fbc1b",
+      "created_at": "2026-10-25T10:16:53.019420",
       "source": "canonical_pipeline",
       "detector": "iqr",
-      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727",
+      "record_ref": "32750624-bd61-4a9e-b4b1-3be771c6f6cd:5727",
       "feature": "quantity"
     },
     {
@@ -512,7 +512,7 @@
         "supplier_id"
       ],
       "record_refs": [
-        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727"
+        "32750624-bd61-4a9e-b4b1-3be771c6f6cd:5727"
       ],
       "metric": "quantity",
       "observed_value": 5360,
@@ -531,11 +531,11 @@
         "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
       ],
       "seasonal_baseline_used": 0,
-      "id": "3a9a24ac-759a-43d2-b60d-e6edcaf52804",
-      "created_at": "2026-10-24T17:16:20.837714",
+      "id": "0d6c4461-dc56-44fb-a36c-dda31bb33ea4",
+      "created_at": "2026-10-25T10:16:53.026526",
       "source": "canonical_pipeline",
       "detector": "rule",
-      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727",
+      "record_ref": "32750624-bd61-4a9e-b4b1-3be771c6f6cd:5727",
       "feature": "quantity"
     },
     {
@@ -546,7 +546,7 @@
         "supplier_id"
       ],
       "record_refs": [
-        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727"
+        "32750624-bd61-4a9e-b4b1-3be771c6f6cd:5727"
       ],
       "metric": "quantity",
       "observed_value": 5360,
@@ -565,11 +565,11 @@
         "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
       ],
       "seasonal_baseline_used": 0,
-      "id": "8855fc98-6e3b-4349-9e64-4fe8221c394b",
-      "created_at": "2026-10-24T17:16:20.846231",
+      "id": "e4888652-25bf-4df0-968d-205420a5885f",
+      "created_at": "2026-10-25T10:16:53.033805",
       "source": "canonical_pipeline",
       "detector": "iqr",
-      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727",
+      "record_ref": "32750624-bd61-4a9e-b4b1-3be771c6f6cd:5727",
       "feature": "quantity"
     }
   ],
@@ -739,16 +739,16 @@
           "has_minimum_support": true
         },
         "evidence_refs": [
-          "08124338-4f0e-47ef-b510-308a7b25b845",
-          "0a4a9d14-0a38-4d17-9bcc-822d7034ff3d",
-          "0c6df2bf-040c-4a55-ba39-64bc8334d47d",
-          "0eacdc32-1196-4014-ae37-69d549556386",
-          "10a5133d-04a4-4d28-9c0b-3bc7a371419c",
-          "10b46805-1f3b-4757-9f62-0fb91ca6e506",
-          "17860b83-8a04-462a-ac17-48c52d23956b",
-          "227136dc-74ff-4472-92a5-faa1f7e7265b",
-          "271a5e2c-ff6f-4772-9dfb-f4b893acc978",
-          "2b12eb76-478e-445b-b461-a2dcd50f4ba2"
+          "07501456-0500-4873-959d-567f418a5d02",
+          "0d55ebff-ae5f-4ff5-a097-7cac4081a500",
+          "0fd39116-69a8-42ac-8080-f0903367d0e7",
+          "116e4305-c245-4fe6-91be-728a4f5b60e6",
+          "14b0b935-c4a8-44a2-b628-a75a124c51c4",
+          "17d51f71-ea19-4324-bc31-42e1edeb4b8d",
+          "1876008e-05e3-4904-8050-55fddf6e3200",
+          "1be34516-614b-4ad6-aee7-7325558a7e5e",
+          "278cf8ec-d0f7-4d60-a484-48742400f544",
+          "28202eba-6fc7-465f-b169-c387b7b6fed5"
         ],
         "linked_incident_count": 0,
         "is_incident_affected": false
@@ -804,13 +804,13 @@
           "has_minimum_support": true
         },
         "evidence_refs": [
-          "17860b83-8a04-462a-ac17-48c52d23956b",
-          "32c055e2-fe53-4d1b-893e-382c95c80a92",
-          "3f50d93c-8b50-4b7d-b0ca-5d056bcf0a3d",
-          "6110ea2d-d6a7-475b-962b-d95c2ab08cde",
-          "92edefcf-7ec3-4603-83fe-88aac18ae051",
-          "b8afbe9c-630e-44d9-ae57-7e5db9bcbdcc",
-          "fa5e8b93-d40b-4c08-ab9c-33fefe75429c"
+          "278cf8ec-d0f7-4d60-a484-48742400f544",
+          "37634bae-9ab1-461f-a2eb-5f07e9130a0a",
+          "67a24aa5-feb0-40b1-af6b-568e4b5b5d8e",
+          "8b18549b-9eb6-47ac-b441-2a9a72c45544",
+          "a6ce7df3-1534-4bbc-992a-11755e903224",
+          "f0117dd0-1ab2-416d-9490-0f7764ac27e1",
+          "f4dcbcd5-e702-44c1-b986-344e6c75e5b7"
         ],
         "linked_incident_count": 0,
         "is_incident_affected": false
@@ -839,16 +839,16 @@
           "has_minimum_support": true
         },
         "evidence_refs": [
-          "048fc8ce-0498-4f36-8d70-9123ce88fe8a",
-          "05070e43-acc6-4943-b5bb-870c26d14057",
-          "08210205-3a9a-411a-98a4-2cda3b1dfc9e",
-          "08f06ad6-5dc8-4761-8752-322325417376",
-          "0b4d92f9-99b7-4cbb-9789-8d98ba0bf042",
-          "0fdc128a-1d8b-4dc3-bbd9-7643578b8ae2",
-          "10a5133d-04a4-4d28-9c0b-3bc7a371419c",
-          "129fa285-a5fa-42d4-bf5b-3a01c38f9ece",
-          "145c156c-6f78-446f-a637-4eb44441a7b3",
-          "149ba773-902b-4e50-ae52-90b7f138c00c"
+          "03ea17c7-24e9-47e3-ba66-2b088f72e225",
+          "0805c4ef-1601-4c05-aa49-62f62635f090",
+          "1430a2da-e455-4c49-a700-6753b0e295a6",
+          "17d51f71-ea19-4324-bc31-42e1edeb4b8d",
+          "1ab9e907-ca9e-434e-95c3-a43c911e1c0b",
+          "1b11b3fe-b593-46d4-a5da-3cc519068141",
+          "1c8ea6ba-b0bc-4e2c-a1dc-ab1c8a25eb71",
+          "1e2e55c0-a98b-489f-8a5f-3195c1fbecb5",
+          "20a6b9c6-d08c-4620-b215-39bffb9165cc",
+          "254378c1-e26c-43e6-9720-493da8e6eb91"
         ],
         "linked_incident_count": 0,
         "is_incident_affected": false
@@ -877,16 +877,16 @@
           "has_minimum_support": true
         },
         "evidence_refs": [
-          "0037ce2b-42cd-45a3-80b2-66978023b6a4",
-          "009b49ac-326f-47ff-b37d-f7a773ce6725",
-          "048fc8ce-0498-4f36-8d70-9123ce88fe8a",
-          "08124338-4f0e-47ef-b510-308a7b25b845",
-          "08210205-3a9a-411a-98a4-2cda3b1dfc9e",
-          "08f06ad6-5dc8-4761-8752-322325417376",
-          "0a4a9d14-0a38-4d17-9bcc-822d7034ff3d",
-          "10b46805-1f3b-4757-9f62-0fb91ca6e506",
-          "121246e9-551c-4f89-b1de-fb4bcdc4d7c1",
-          "142116e6-c618-4870-a3a8-6c1a88b44e00"
+          "001a0970-def9-4bef-ba4c-dbd9fea64910",
+          "03ea17c7-24e9-47e3-ba66-2b088f72e225",
+          "07501456-0500-4873-959d-567f418a5d02",
+          "09ea9fdc-a86e-4803-9294-0ba6ae60836e",
+          "0c66fd78-8634-47df-aa53-7b0b33a45ecd",
+          "0d0ff601-5a83-42bd-b380-3accf1a7554f",
+          "0d6c4461-dc56-44fb-a36c-dda31bb33ea4",
+          "0e767e8e-09b0-4dd1-8f23-e401d44d1d97",
+          "0fd39116-69a8-42ac-8080-f0903367d0e7",
+          "115776cb-b23d-4331-a4cd-b6438ca495a5"
         ],
         "linked_incident_count": 0,
         "is_incident_affected": false
@@ -915,13 +915,13 @@
           "has_minimum_support": true
         },
         "evidence_refs": [
-          "41961197-5dac-4a03-9a7b-11e252330ea1",
-          "4b9c2536-9484-49e1-b72d-17772e2d5c8f",
-          "5033a5a0-5c86-4021-80eb-e9f1b340baf1",
-          "657f097b-da12-48a9-b117-d988b60dfa3c",
-          "9610d9f5-198f-42bd-bfbb-0c1c4c1df46a",
-          "c3fa82bd-7787-42b7-987b-a645e59c15e9",
-          "d26d3845-d0d8-45ff-bed5-e30c11216115"
+          "07dfaed0-c053-4687-928c-83d7ddbd3440",
+          "21ce46aa-f853-48c1-8aa5-9de06fee8501",
+          "52743253-fd16-4fa4-a056-d633178de29b",
+          "575d4f2d-05e0-4b31-b5a7-122d16436385",
+          "5999a13f-25db-4341-b17a-c55464258aed",
+          "5e9a3623-e106-471b-a049-22956a7e40ac",
+          "79a18f8b-1494-40fd-a31b-a28ad7114f50"
         ],
         "linked_incident_count": 0,
         "is_incident_affected": false
@@ -950,16 +950,16 @@
           "has_minimum_support": true
         },
         "evidence_refs": [
-          "0208eb75-8a86-4ba1-88e2-e6054e8600de",
-          "08ea5e60-fc5b-4dce-9371-c7169828fe87",
-          "0b4d92f9-99b7-4cbb-9789-8d98ba0bf042",
-          "0c6df2bf-040c-4a55-ba39-64bc8334d47d",
-          "0d43093b-cda6-41e5-a3bd-886dd3c60474",
-          "10a5133d-04a4-4d28-9c0b-3bc7a371419c",
-          "1294e269-6569-4dbe-9727-28f1958ebf61",
-          "154542ec-034a-4bcc-9d57-f9e35f13b621",
-          "17914252-6ab7-4606-ae27-c2ab71e8666f",
-          "1a07b48f-6d49-4c05-8bbc-a79967bf2e3a"
+          "03de3f86-ab63-48e0-8dff-ec36506c9d62",
+          "03ea17c7-24e9-47e3-ba66-2b088f72e225",
+          "07501456-0500-4873-959d-567f418a5d02",
+          "0805c4ef-1601-4c05-aa49-62f62635f090",
+          "09ea9fdc-a86e-4803-9294-0ba6ae60836e",
+          "0d55ebff-ae5f-4ff5-a097-7cac4081a500",
+          "0f46c04a-4487-4f23-a427-bb240f9ce2d0",
+          "12b1383d-ef7f-4671-8e04-2f0dbe101ecc",
+          "139b463c-9a3e-4ec4-bc69-45620cc227cb",
+          "1403d8ba-f890-45b1-a7af-ab29b1f449ad"
         ],
         "linked_incident_count": 0,
         "is_incident_affected": false
@@ -988,10 +988,10 @@
           "has_minimum_support": true
         },
         "evidence_refs": [
-          "7ce3a8fd-9027-4907-b244-c3b9acbc8c6a",
-          "92e6d166-02e1-493d-b25a-a81726b2f51c",
-          "a973a893-ce6c-49a9-9872-fbc3c185cefa",
-          "c6f79aae-c9f3-497f-9c2f-f7b8ea8c0790"
+          "299f5ff6-04f1-43ed-bb48-53db16ef4b49",
+          "91372842-bb2d-4856-8f0a-0de7bf37a0e1",
+          "98c9683e-962b-432d-a098-2069597edc88",
+          "a1f8e252-0ded-4c17-bc1c-5699b3be0712"
         ],
         "linked_incident_count": 0,
         "is_incident_affected": false
@@ -1020,14 +1020,14 @@
           "has_minimum_support": true
         },
         "evidence_refs": [
-          "08ea5e60-fc5b-4dce-9371-c7169828fe87",
-          "25fdafd5-2c1e-40ba-9278-d661153ac490",
-          "3771e592-8ce0-4ee5-9f2a-425bf18e597f",
-          "4aa75763-172b-4695-92ed-de66c54fcd33",
-          "4b7b251d-33e5-40c3-ada7-9a0f5c238c4f",
-          "76fb5bcd-fddd-4c43-bc53-8b1af1d98085",
-          "dbddc2f8-ec78-4ac7-8d5c-44adcffd4eb0",
-          "efa6d395-009a-4889-98d5-85e85fbdacc4"
+          "0f46c04a-4487-4f23-a427-bb240f9ce2d0",
+          "1798fbd0-61c9-40a6-91f2-f8be1fd5a79c",
+          "254378c1-e26c-43e6-9720-493da8e6eb91",
+          "52014fa8-21eb-472a-b1fa-bcbdd23dfd63",
+          "635ca1d8-3198-4ee2-8183-7318b093b05c",
+          "9ac9c2cf-82b4-4a2f-a45a-245da50b01c3",
+          "f44183cc-1d62-470b-802d-9064d80be2f9",
+          "fb08c316-2a43-4edf-b595-95a065c53fb7"
         ],
         "linked_incident_count": 0,
         "is_incident_affected": false
@@ -1056,16 +1056,16 @@
           "has_minimum_support": true
         },
         "evidence_refs": [
-          "1310c4eb-ee81-4559-ac09-f3e02533e45f",
-          "1c5e1954-5ece-45fa-94aa-678bd77cc3aa",
-          "391be3c7-cf37-4ebd-b7c2-92562da605c2",
-          "4aeb9458-4a9d-46f6-ac72-ddb3668f8d19",
-          "50937dad-0c40-4c5f-8157-2d0138e2265e",
-          "52567907-0dd9-4a90-8b61-eb8af789c862",
-          "63032bb0-2dbb-40fc-b8e2-bcf43595c635",
-          "c3de73ba-6433-430a-bca6-12bc17bc0542",
-          "da4edfc7-444e-4cb9-8793-d0724c080480",
-          "dab1106d-b01e-47ac-8254-22df652e2cee"
+          "1c8ea6ba-b0bc-4e2c-a1dc-ab1c8a25eb71",
+          "1e2e55c0-a98b-489f-8a5f-3195c1fbecb5",
+          "3e04f8c0-9c69-4c5a-805a-ee46f528e4f2",
+          "560fe6ed-d1b5-4a11-bed9-2b61673d19bb",
+          "89335f14-9ac0-422c-8c6e-442a5bd99c09",
+          "899167bd-3671-4dab-868c-52ec49f742a7",
+          "9609e445-3c7b-4b66-973e-8c387d593bcf",
+          "ba4e77bc-6819-4973-b03f-32a2b7aa94e1",
+          "df1013c9-98c4-40d6-a084-38e39d915c00",
+          "f4c8df6d-1e22-4b9d-b2eb-9209b04cc128"
         ],
         "linked_incident_count": 0,
         "is_incident_affected": false
@@ -1118,6 +1118,14 @@
       }
     },
     "reviewer": {
+      "approve_action": {
+        "allowed": true,
+        "status_code": 200
+      },
+      "confirm_hypothesis": {
+        "allowed": true,
+        "status_code": 200
+      },
       "manage_users": {
         "allowed": false,
         "status_code": 403

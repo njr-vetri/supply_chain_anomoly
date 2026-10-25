@@ -3,8 +3,8 @@ version: v0001
 description: Kaveri Foods mapping for purchase_orders
 source_file: 5768cc8fbd8a9cc9faeef91636d741471ba4e45f0cf552a25cc8e105576715e5_purchase_orders.csv
 source_archive_sha256: 5768cc8fbd8a9cc9faeef91636d741471ba4e45f0cf552a25cc8e105576715e5
-created_at: '2026-10-24T16:57:41.471267Z'
-updated_at: '2026-10-24T16:57:41.471273Z'
+created_at: '2026-10-25T10:14:30.706819Z'
+updated_at: '2026-10-25T10:14:30.706844Z'
 mappings:
   po_number: order_id
   po_date: order_ts

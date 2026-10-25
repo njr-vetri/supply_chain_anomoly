@@ -9,6 +9,7 @@ import json
 import os
 from pathlib import Path
 from typing import Any
+import uuid
 
 import pytest
 from fastapi.testclient import TestClient
@@ -485,8 +486,48 @@ def test_e2e_acceptance_kaveri_foods_and_company_b(test_env):
     assert v_conf.status_code == 403
     role_results["viewer"]["confirm_hypothesis"] = {"allowed": False, "status_code": v_conf.status_code}
 
-    # Action approval returns strictly 403 for viewer (never 404)
-    v_act = client.post("/api/v1/actions/dummy-a/approve", json={"reason": "test"}, headers=viewer_auth)
+    from sqlalchemy import select
+    from src.core.repository import ActionRow, ApprovalRow, RecommendationRow, IncidentRow, DatasetVersionRow
+    from datetime import datetime, timezone
+    real_rec_id = f"real-rec-{uuid.uuid4().hex[:8]}"
+    real_appr_id = f"real-appr-{uuid.uuid4().hex[:8]}"
+    real_act_id = f"real-act-{uuid.uuid4().hex[:8]}"
+    with test_env["repo"].sessions() as session:
+        existing_inc = session.scalar(select(IncidentRow).where(IncidentRow.company_id == "kaveri_foods"))
+        if existing_inc:
+            target_inc_id = existing_inc.id
+        elif inc_items:
+            target_inc_id = inc_items[0]["id"]
+        else:
+            dv = session.scalar(select(DatasetVersionRow))
+            target_inc_id = f"inc-{uuid.uuid4().hex[:8]}"
+            session.add(IncidentRow(
+                id=target_inc_id, dataset_version_id=dv.id if dv else "dv-test",
+                source="test", title="Test Incident", occurred_at=datetime.now(timezone.utc),
+                company_id="kaveri_foods"
+            ))
+            session.flush()
+
+        session.add(RecommendationRow(
+            id=real_rec_id, incident_id=target_inc_id, source="test", action="Mitigate delay",
+            payload={"action": "Mitigate delay"}, company_id="kaveri_foods"
+        ))
+        session.flush()
+        session.add(ApprovalRow(
+            id=real_appr_id, recommendation_id=real_rec_id, status="PENDING",
+            payload={"requested_action": "Mitigate delay"}, company_id="kaveri_foods"
+        ))
+        session.flush()
+        session.add(ActionRow(
+            id=real_act_id, recommendation_id=real_rec_id, approval_id=real_appr_id,
+            source="test", status="PENDING_APPROVAL", dry_run=True,
+            company_id="kaveri_foods", payload={"status": "PENDING_APPROVAL"}
+        ))
+        session.flush()
+        session.commit()
+
+    # Action approval on real action returns strictly 403 for viewer (never 404)
+    v_act = client.post(f"/api/v1/actions/{real_act_id}/approve", json={"reason": "test"}, headers=viewer_auth)
     assert v_act.status_code == 403, f"Expected 403 for viewer action approval, got {v_act.status_code}"
     role_results["viewer"]["approve_action"] = {"allowed": False, "status_code": v_act.status_code}
 
@@ -499,10 +540,15 @@ def test_e2e_acceptance_kaveri_foods_and_company_b(test_env):
     assert a_conf.status_code == 403
     role_results["analyst"]["confirm_hypothesis"] = {"allowed": False, "status_code": a_conf.status_code}
 
-    # Action approval returns strictly 403 for analyst (never 404)
-    a_act = client.post("/api/v1/actions/dummy-a/approve", json={"reason": "test"}, headers=analyst_auth)
+    # Action approval on real action returns strictly 403 for analyst (never 404)
+    a_act = client.post(f"/api/v1/actions/{real_act_id}/approve", json={"reason": "test"}, headers=analyst_auth)
     assert a_act.status_code == 403, f"Expected 403 for analyst action approval, got {a_act.status_code}"
     role_results["analyst"]["approve_action"] = {"allowed": False, "status_code": a_act.status_code}
+
+    # Reviewer approves the real action -> 200
+    r_act = client.post(f"/api/v1/actions/{real_act_id}/approve", json={"reason": "Approved by reviewer"}, headers=reviewer_auth)
+    assert r_act.status_code == 200, f"Expected 200 for reviewer action approval, got {r_act.status_code}"
+    role_results["reviewer"]["approve_action"] = {"allowed": True, "status_code": r_act.status_code}
 
     a_usr = client.post("/api/v1/auth/users", json={"username": "illegal", "role": "viewer"}, headers=analyst_auth)
     assert a_usr.status_code == 403

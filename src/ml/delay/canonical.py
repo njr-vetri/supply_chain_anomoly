@@ -252,6 +252,8 @@ def evaluate_canonical_delay(records: list[dict[str, Any]], settings: Any,
     if "supplier_id" in usable_df.columns and "product_id" in usable_df.columns:
         usable_df["supplier_x_product"] = usable_df["supplier_id"].astype(str) + " x " + usable_df["product_id"].astype(str)
 
+    usable_df["_week"] = usable_df[pred_time_col].dt.to_period("W").dt.to_timestamp()
+
     candidate_factors = [
         c for c in ("supplier_id", "carrier", "warehouse_id", "product_id", "route", "carrier_x_route", "supplier_x_product")
         if c in usable_df.columns
@@ -273,8 +275,7 @@ def evaluate_canonical_delay(records: list[dict[str, Any]], settings: Any,
             diff = d_rate - overall_mean
             if diff > 0.02:
                 # Change-point detection on weekly late-rate series
-                sub_df = usable_df[usable_df[d_col].astype(str) == d_val].sort_values(pred_time_col).copy()
-                sub_df["_week"] = sub_df[pred_time_col].dt.to_period("W").dt.to_timestamp()
+                sub_df = usable_df[usable_df[d_col].astype(str) == d_val].sort_values(pred_time_col)
                 weekly_series = sub_df.groupby("_week").agg(
                     w_total=(target, "count"),
                     w_late=(target, "sum"),

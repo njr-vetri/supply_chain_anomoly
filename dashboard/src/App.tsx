@@ -1,10 +1,10 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react'
 import {
-  Activity, AlertTriangle, ArrowDownUp, Bell, CheckCircle2, ChevronRight,
+  Activity, AlertTriangle, ArrowDownUp, Bell, Building2, CheckCircle2, ChevronRight,
   CircleHelp, Clock3, Database, FileSearch, FileText, Gauge, History,
   LayoutDashboard, ListChecks, LoaderCircle, LockKeyhole, Moon, Network, RefreshCw,
   Search, Settings2, ShieldAlert, Sun, Truck, X, ClipboardCheck, Cpu, BarChart2,
-  Box, Leaf, Users, Key, KeyRound, LogOut
+  Leaf, Users, Key, KeyRound, LogOut
 } from 'lucide-react'
 import { ApiClient, ApiError, defaultApiUrl } from './api/client'
 import type { Action, Approval, FindingKind, Hypothesis, Incident, IncidentDetail, Page, QualityItem, Recommendation, Role } from './api/types'
@@ -85,6 +85,7 @@ const screenPaths: Record<Exclude<Screen, 'notFound'>, string> = {
 function routeFromPath(): { screen: Screen; incidentId: string | null } {
   const path = window.location.pathname
   if (path === '/' || path === '/overview') return { screen: 'overview', incidentId: null }
+  if (path === '/graph') return { screen: 'supply-graph', incidentId: null }
   if (path === '/incidents') return { screen: 'incidents', incidentId: null }
   const match = path.match(/^\/incidents\/([^/]+)$/)
   if (match) {
@@ -116,9 +117,14 @@ function readSession(): SessionSettings {
 
 function readCompany(): CompanyContext {
   try {
-    return JSON.parse(sessionStorage.getItem(companyKey) || '{}') as CompanyContext
+    const saved = JSON.parse(sessionStorage.getItem(companyKey) || '{}') as CompanyContext
+    return {
+      companyId: saved.companyId || 'local',
+      workspaceName: saved.workspaceName || '',
+      projectId: saved.projectId || 'project-kaveri_foods',
+    }
   } catch {
-    return { companyId: 'local', workspaceName: '', projectId: '' }
+    return { companyId: 'local', workspaceName: '', projectId: 'project-kaveri_foods' }
   }
 }
 
@@ -270,6 +276,68 @@ function ChangePasswordModal({ client, onClose }: { client: ApiClient; onClose: 
   )
 }
 
+function AdminProfileModal({
+  session, company, onChangeCompany, onClose,
+}: {
+  session: SessionSettings
+  company: CompanyContext
+  onChangeCompany: (ctx: CompanyContext) => void
+  onClose: () => void
+}) {
+  const [compVal, setCompVal] = useState(company.companyId)
+  const [workVal, setWorkVal] = useState(company.workspaceName)
+  const [projVal, setProjVal] = useState(company.projectId || 'project-kaveri_foods')
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault()
+    onChangeCompany({
+      companyId: compVal.trim() || 'local',
+      workspaceName: workVal.trim(),
+      projectId: projVal.trim() || 'project-kaveri_foods',
+    })
+    onClose()
+  }
+
+  return (
+    <div className="dialog-backdrop">
+      <div className="dialog-panel max-w-md w-full">
+        <div className="flex items-center justify-between border-b border-line pb-3 dark:border-slate-800">
+          <div className="flex items-center gap-2">
+            <Building2 size={17} className="text-brand" />
+            <h3 className="font-semibold text-sm text-ink dark:text-white">Admin Profile & Scope</h3>
+          </div>
+          <button className="icon-button" onClick={onClose}><X size={15} /></button>
+        </div>
+        <div className="py-4 space-y-3.5 text-xs">
+          <div className="rounded-xl bg-slate-50 p-3 dark:bg-slate-900 border border-line dark:border-slate-800 space-y-1.5">
+            <div className="flex justify-between"><span className="text-muted">Current Actor:</span><span className="font-semibold font-mono text-ink dark:text-white">{session.username || session.email || 'useradmin'}</span></div>
+            <div className="flex justify-between"><span className="text-muted">Assigned Role:</span><span className="font-bold text-brand uppercase">{session.role} (Administrator)</span></div>
+            <div className="flex justify-between"><span className="text-muted">Local Server:</span><span className="font-mono text-muted">{session.apiUrl}</span></div>
+          </div>
+          <form onSubmit={handleSave} className="space-y-3">
+            <label className="block">
+              <span className="font-semibold text-ink dark:text-slate-200">Company ID (Tenant Scope)</span>
+              <input className="text-input mt-1 w-full" value={compVal} onChange={(e) => setCompVal(e.target.value)} placeholder="e.g. kaveri or local" />
+            </label>
+            <label className="block">
+              <span className="font-semibold text-ink dark:text-slate-200">Workspace Label</span>
+              <input className="text-input mt-1 w-full" value={workVal} onChange={(e) => setWorkVal(e.target.value)} placeholder="optional" />
+            </label>
+            <label className="block">
+              <span className="font-semibold text-ink dark:text-slate-200">Active Supply Chain Project ID</span>
+              <input className="text-input mt-1 w-full font-mono text-[11px]" value={projVal} onChange={(e) => setProjVal(e.target.value)} placeholder="project-kaveri_foods" />
+            </label>
+            <div className="flex justify-end gap-2 pt-2">
+              <button type="button" className="btn-secondary" onClick={onClose}>Close</button>
+              <button type="submit" className="primary-button">Save Scope</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   const [session, setSession] = useState<SessionSettings>(readSession)
   const [company, setCompany] = useState<CompanyContext>(() => ({ ...readCompany(), companyId: readSession().companyId || 'local' }))
@@ -294,6 +362,7 @@ function App() {
   const [knownSources, setKnownSources] = useState<string[]>([])
   const [expiredMsg, setExpiredMsg] = useState<string | null>(null)
   const [changePwdOpen, setChangePwdOpen] = useState(false)
+  const [profileModalOpen, setProfileModalOpen] = useState(false)
 
   // Show login gate when no token is present
   const needsLogin = !session.token.trim()
@@ -344,29 +413,53 @@ function App() {
     setSession(newSession)
   }
 
-  const navItems: Array<{ id: Exclude<Screen, 'notFound'>; label: string; icon: ReactNode; section?: string }> = useMemo(() => [
-    { id: 'overview', label: 'Overview', icon: <LayoutDashboard size={17} />, section: 'MONITOR' },
-    { id: 'incidents', label: 'Incidents', icon: <ShieldAlert size={17} /> },
-    { id: 'monitoring', label: 'Monitoring', icon: <Activity size={17} /> },
-    { id: 'predictions', label: 'Predictions', icon: <BarChart2 size={17} /> },
-    { id: 'supply-graph', label: 'Supply graph', icon: <Box size={17} />, section: 'INVESTIGATE' },
-    { id: 'graph', label: 'Incident graph', icon: <Network size={17} /> },
-    { id: 'hypotheses', label: 'Hypotheses', icon: <ListChecks size={17} /> },
-    { id: 'datasources', label: 'Data sources', icon: <Database size={17} />, section: 'DATA' },
-    { id: 'recommendations', label: 'Recommendations', icon: <ClipboardCheck size={17} />, section: 'WORKFLOW' },
-    { id: 'approvals', label: 'Approval queue', icon: <Leaf size={17} /> },
-    { id: 'activity', label: 'Alerts & outcomes', icon: <History size={17} /> },
-    { id: 'system-health', label: 'System health', icon: <Cpu size={17} />, section: 'GOVERNANCE' },
-    { id: 'models', label: 'Models & eval', icon: <Gauge size={17} /> },
-    { id: 'audit', label: 'Audit log', icon: <FileSearch size={17} /> },
-    { id: 'settings', label: 'Settings', icon: <Settings2 size={17} /> },
-    ...(session.role === 'admin'
-      ? [
-          { id: 'users' as const, label: 'Users', icon: <Users size={17} />, section: 'ADMIN' },
-          { id: 'api-keys' as const, label: 'API Keys', icon: <Key size={17} /> },
-        ]
-      : []),
-  ], [session.role])
+  const navItems: Array<{ id: Exclude<Screen, 'notFound'>; label: string; icon: ReactNode; section?: string }> = useMemo(() => {
+    const role = session.role
+    if (role === 'viewer') {
+      return [
+        { id: 'overview', label: 'Overview', icon: <LayoutDashboard size={17} />, section: 'OPERATIONS' },
+        { id: 'supply-graph', label: 'Supply Chain Map', icon: <Network size={17} /> },
+        { id: 'incidents', label: 'Incidents', icon: <ShieldAlert size={17} /> },
+        { id: 'activity', label: 'Alerts & History', icon: <History size={17} /> },
+      ]
+    }
+    if (role === 'analyst') {
+      return [
+        { id: 'overview', label: 'Overview', icon: <LayoutDashboard size={17} />, section: 'MONITOR' },
+        { id: 'supply-graph', label: 'Supply Chain Map', icon: <Network size={17} /> },
+        { id: 'incidents', label: 'Incidents', icon: <ShieldAlert size={17} /> },
+        { id: 'predictions', label: 'Predictions & Risk', icon: <BarChart2 size={17} /> },
+        { id: 'datasources', label: 'Data Sources & Upload', icon: <Database size={17} />, section: 'DATA & ML' },
+        { id: 'hypotheses', label: 'Candidate Hypotheses', icon: <ListChecks size={17} /> },
+        { id: 'recommendations', label: 'Playbooks & What-If', icon: <ClipboardCheck size={17} />, section: 'WORKFLOW' },
+        { id: 'monitoring', label: 'Drift & Quality', icon: <Activity size={17} /> },
+      ]
+    }
+    if (role === 'reviewer') {
+      return [
+        { id: 'overview', label: 'Overview', icon: <LayoutDashboard size={17} />, section: 'GOVERNANCE' },
+        { id: 'approvals', label: 'Approval Queue', icon: <Leaf size={17} /> },
+        { id: 'hypotheses', label: 'Hypothesis Review', icon: <ListChecks size={17} /> },
+        { id: 'supply-graph', label: 'Supply Chain Map', icon: <Network size={17} />, section: 'INVESTIGATE' },
+        { id: 'incidents', label: 'Incidents', icon: <ShieldAlert size={17} /> },
+        { id: 'recommendations', label: 'Action Proposals', icon: <ClipboardCheck size={17} /> },
+        { id: 'models', label: 'Model Evaluation', icon: <Gauge size={17} />, section: 'AUDIT & MODEL' },
+        { id: 'audit', label: 'Audit Trail', icon: <FileSearch size={17} /> },
+      ]
+    }
+    // admin role
+    return [
+      { id: 'overview', label: 'Overview', icon: <LayoutDashboard size={17} />, section: 'COMMAND' },
+      { id: 'supply-graph', label: 'Supply Chain Map', icon: <Network size={17} /> },
+      { id: 'incidents', label: 'Incidents', icon: <ShieldAlert size={17} /> },
+      { id: 'datasources', label: 'Data Sources & Upload', icon: <Database size={17} />, section: 'DATA' },
+      { id: 'users', label: 'User Accounts', icon: <Users size={17} />, section: 'ADMINISTRATION' },
+      { id: 'api-keys', label: 'API Keys', icon: <Key size={17} /> },
+      { id: 'system-health', label: 'System Health & Kill Switch', icon: <Cpu size={17} />, section: 'SYSTEM' },
+      { id: 'audit', label: 'Audit Log', icon: <FileSearch size={17} /> },
+      { id: 'settings', label: 'Settings', icon: <Settings2 size={17} /> },
+    ]
+  }, [session.role])
 
   function navigate(to: Screen) {
     if (to === 'notFound') return
@@ -375,7 +468,7 @@ function App() {
     setSelected(null)
   }
 
-  const connected = health.value?.status === 'ok'
+  const connected = health.value?.status === 'ok' || health.value?.status === 'healthy' || !!health.value
   const items = listOf(incidents.value)
   const recs = listOf(recommendations.value)
   const incidentRecs = recs.filter((item) => item.incident_id === selected)
@@ -442,6 +535,16 @@ function App() {
     return () => window.removeEventListener('popstate', syncRoute)
   }, [])
 
+  // Role guard: redirect to overview if current screen is not permitted for this role
+  useEffect(() => {
+    const allowed = new Set(navItems.map((item) => item.id))
+    allowed.add('overview')
+    if (screen !== 'notFound' && !allowed.has(screen)) {
+      setScreen('overview')
+      window.history.replaceState({}, '', '/')
+    }
+  }, [navItems, screen])
+
   const filtered = [...items]
     .filter((item) => `${item.title} ${item.description} ${item.source} ${item.id}`.toLowerCase().includes(search.toLowerCase()))
     .filter(() => severity === 'all' || severity === 'unavailable')
@@ -501,7 +604,11 @@ function App() {
             <LockKeyhole size={15} />
             <span>Local API only<br /><small>No external services</small></span>
           </div>
-          <div className="profile-row">
+          <div
+            className="profile-row cursor-pointer transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+            onClick={() => setProfileModalOpen(true)}
+            title="Click to view and edit Admin Profile & Scope"
+          >
             <div className="avatar">{(session.username || session.role).slice(0, 1).toUpperCase()}</div>
             <div className="min-w-0">
               <p className="truncate text-xs font-semibold text-ink dark:text-white">{session.username || session.email}</p>
@@ -599,7 +706,7 @@ function App() {
           {health.error && <div className="mb-5"><ErrorPanel message={health.error} onRetry={() => void refresh()} /></div>}
           {screen === 'notFound' ? <NotFoundPage goHome={() => navigate('overview')} />
             : selected ? <IncidentView detail={detail} recommendations={incidentRecs} actions={relatedActions} approvals={relatedApprovals} role={session.role} rationales={rationales} setRationales={setRationales} confirmHypothesis={confirmHypothesis} confirming={confirming} onBack={() => navigate('incidents')} retry={() => void fetchDetail(selected)} />
-            : screen === 'overview' ? <Overview incidents={incidents} quality={quality} onOpen={() => navigate('incidents')} retry={() => void refresh()} />
+            : screen === 'overview' ? <Overview incidents={incidents} quality={quality} onOpen={() => navigate('incidents')} onUpload={() => navigate('datasources')} retry={() => void refresh()} />
             : screen === 'incidents' ? <IncidentList state={incidents} filtered={filtered} search={search} setSearch={setSearch} sort={sort} setSort={setSort} severity={severity} setSeverity={setSeverity} status={status} setStatus={setStatus} open={(id) => void loadDetail(id)} retry={() => void refresh()} />
             : screen === 'graph' ? <Suspense fallback={<LoadingState large />}><DependencyGraph client={client} incidents={items} /></Suspense>
             : screen === 'hypotheses' ? <HypothesisLedgerScreen client={client} role={session.role} incidents={items} />
@@ -610,7 +717,7 @@ function App() {
             : screen === 'datasources' ? <DataSourcesScreen client={client} role={session.role} />
             : screen === 'monitoring' ? <MonitoringScreen client={client} role={session.role} knownSources={knownSources} />
             : screen === 'predictions' ? <PredictionsScreen client={client} />
-            : screen === 'supply-graph' ? <SupplyGraphScreen client={client} projectId={company.projectId} />
+            : screen === 'supply-graph' ? <SupplyGraphScreen client={client} projectId={company.projectId || 'project-kaveri_foods'} />
             : screen === 'recommendations' ? <RecommendationsScreen client={client} role={session.role} />
             : screen === 'system-health' ? <SystemHealthScreen client={client} role={session.role} onAudit={() => navigate('audit')} />
             : screen === 'users' ? <UsersScreen client={client} />
@@ -623,6 +730,14 @@ function App() {
         </footer>
       </main>
       {changePwdOpen && <ChangePasswordModal client={client} onClose={() => setChangePwdOpen(false)} />}
+      {profileModalOpen && (
+        <AdminProfileModal
+          session={session}
+          company={company}
+          onChangeCompany={handleCompanyChange}
+          onClose={() => setProfileModalOpen(false)}
+        />
+      )}
     </div>
   )
 }
@@ -631,9 +746,18 @@ function errorText(error: unknown): string {
   return error instanceof ApiError ? `${error.message}${error.status ? ` (HTTP ${error.status})` : ''}` : error instanceof Error ? error.message : 'Unknown request error'
 }
 
-function Overview({ incidents, quality, onOpen, retry }: { incidents: LoadState<Page<Incident>>; quality: LoadState<Page<QualityItem>>; onOpen: () => void; retry: () => void }) {
+function Overview({
+  incidents, quality, onOpen, onUpload, retry,
+}: {
+  incidents: LoadState<Page<Incident>>
+  quality: LoadState<Page<QualityItem>>
+  onOpen: () => void
+  onUpload: () => void
+  retry: () => void
+}) {
   const rows = listOf(quality.value)
   const warnings = rows.filter((item) => !item.fresh || Object.values(item.null_rates).some((rate) => rate > 0))
+  const latestBatch = rows[0]?.observed_at
   return (
     <div className="space-y-7">
       <section className="page-intro">
@@ -642,15 +766,20 @@ function Overview({ incidents, quality, onOpen, retry }: { incidents: LoadState<
           <h2>Supply network at a glance</h2>
           <p>Evidence-led monitoring across the connected local data sources.</p>
         </div>
-        <button className="primary-button" onClick={onOpen}>
-          <ShieldAlert size={16} />View incidents<ChevronRight size={16} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button className="secondary-button" onClick={onUpload}>
+            <Database size={15} />Upload Dataset
+          </button>
+          <button className="primary-button" onClick={onOpen}>
+            <ShieldAlert size={16} />View incidents<ChevronRight size={16} />
+          </button>
+        </div>
       </section>
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <ValueCard title="Stored incidents" value={incidents.value?.count ?? (incidents.loading ? '…' : '—')} icon={<ShieldAlert size={17} />} tone="blue" detail="Persisted incident records" />
-        <ValueCard title="Severity breakdown" value="Unavailable" icon={<Gauge size={17} />} tone="violet" detail="Incident schema does not expose severity" />
+        <ValueCard title="Severity breakdown" value="Evidence-Led" icon={<Gauge size={17} />} tone="violet" detail="Statistical anomaly scores; no invented tiers" />
         <ValueCard title="Quality / freshness flags" value={quality.value ? warnings.length : quality.loading ? '…' : '—'} icon={<Database size={17} />} tone="amber" detail="Rows stale or with observed nulls" />
-        <ValueCard title="Latest pipeline run" value="Unavailable" icon={<Clock3 size={17} />} tone="green" detail="No pipeline run history endpoint" />
+        <ValueCard title="Latest pipeline run" value={latestBatch ? formatDate(latestBatch).split(',')[0] : 'Unavailable'} icon={<Clock3 size={17} />} tone="green" detail={latestBatch ? `Batch observed ${formatDate(latestBatch)}` : 'No pipeline run history endpoint'} />
       </section>
       {(incidents.error || quality.error) && <ErrorPanel message={incidents.error || quality.error || ''} onRetry={retry} />}
       <section className="grid gap-5 xl:grid-cols-[1.4fr_1fr]">
@@ -660,7 +789,9 @@ function Overview({ incidents, quality, onOpen, retry }: { incidents: LoadState<
               <div className="flex items-center gap-2"><h3>Data source health</h3><TypeBadge kind="FACT" /></div>
               <p>Freshness and recorded null rates reported by the API</p>
             </div>
-            <Database size={18} className="text-muted" />
+            <button className="secondary-button !py-1 !px-2.5 !text-xs" onClick={onUpload}>
+              <Database size={13} />+ Upload Dataset
+            </button>
           </div>
           {quality.loading ? (
             <LoadingState />

@@ -3,8 +3,8 @@ version: v0001
 description: Kaveri Foods mapping for sales
 source_file: 8749f2125b3abb0aca81c2d15ab3db108dca0cef98867381b36482eb566b2c29_sales.csv
 source_archive_sha256: 8749f2125b3abb0aca81c2d15ab3db108dca0cef98867381b36482eb566b2c29
-created_at: '2026-10-24T16:57:42.279895Z'
-updated_at: '2026-10-24T16:57:42.279907Z'
+created_at: '2026-10-25T10:14:31.290363Z'
+updated_at: '2026-10-25T10:14:31.290368Z'
 mappings:
   sale_date: order_ts
   sku: product_id

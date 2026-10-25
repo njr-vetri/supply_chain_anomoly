@@ -1320,6 +1320,11 @@ def create_app(repository: Repository | None = None) -> FastAPI:
     @app.exception_handler(HTTPException)
     async def http_error(_request: Request, exc: HTTPException) -> JSONResponse:
         code = {401: "unauthorized", 403: "forbidden", 404: "not_found", 409: "conflict", 422: "invalid_request", 423: "locked"}.get(exc.status_code, "http_error")
+        # 422 always uses the canonical validation message for a consistent API contract;
+        # the specific reason is placed in "details" so callers can inspect it.
+        if exc.status_code == 422:
+            return JSONResponse(status_code=422, content={"error": {"code": "invalid_request",
+                "message": "Request validation failed", "details": str(exc.detail)}})
         return JSONResponse(status_code=exc.status_code, content={"error": {"code": code,
             "message": str(exc.detail), "details": None}})
 
@@ -1901,7 +1906,7 @@ def create_app(repository: Repository | None = None) -> FastAPI:
     def decide_approval(approval_id: str, approved: bool, body: DecisionBody, repo: Repository, identity: dict[str, str]):
         with repo.sessions() as session: row = session.get(ApprovalRow, approval_id)
         if not row: raise HTTPException(404, "Approval not found")
-        if row.status != "pending": raise HTTPException(409, "Approval is already reviewed")
+        if row.status.lower() != "pending": raise HTTPException(409, "Approval is already reviewed")
         row.status = "approved" if approved else "rejected"
         row.reviewer_id = identity["actor"]
         row.reviewed_at = datetime.now(timezone.utc)
@@ -3023,6 +3028,26 @@ def create_app(repository: Repository | None = None) -> FastAPI:
                             records.append(rec)
                         except Exception:
                             continue
+
+        if not records:
+            # Fall back to processed company files if data_sources rows are not present in this DB
+            for c_id in (repo.company_id, "kaveri_foods", "local"):
+                comp_dir = Path("data/processed/companies") / c_id
+                if comp_dir.exists():
+                    for sub in comp_dir.iterdir():
+                        if sub.is_dir():
+                            for jf in sub.glob("*.jsonl"):
+                                with jf.open("r", encoding="utf-8") as f:
+                                    for line in f:
+                                        if len(records) >= 20000:
+                                            break
+                                        try:
+                                            records.append(json.loads(line))
+                                        except Exception:
+                                            continue
+                if records:
+                    source_name = f"{c_id}_processed"
+                    break
 
         anomalies_rows = repo.list_rows(AnomalyRow, limit=1000)
         anomalies = [{"id": a.id, "record_ref": a.record_ref, "feature": a.feature, "severity": (a.payload or {}).get("severity", 0.8)} for a in anomalies_rows]

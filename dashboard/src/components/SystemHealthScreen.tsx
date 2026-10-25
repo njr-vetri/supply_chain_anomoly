@@ -121,17 +121,45 @@ function ModelVersionsSection({
 
             {/* Governance actions */}
             {can(role, 'reviewer') && (
-              <div className="mt-3 flex flex-wrap gap-2 items-center border-t border-line pt-3 dark:border-slate-800">
-                <input className="text-input flex-1 min-w-40 text-xs" value={promoteReason}
-                  onChange={(e) => setPromoteReason(e.target.value)} placeholder="Reviewer reason (required)" />
-                <button className="primary-button text-xs" disabled={!promoteReason.trim() || !!promoteBusy}
-                  onClick={() => void promote(version)}>
-                  {promoteBusy === version ? <Spinner /> : 'Promote'}
-                </button>
-                <button className="btn-secondary text-xs" disabled={!promoteReason.trim() || rollbackBusy}
-                  onClick={() => void rollback(modelKey)}>
-                  {rollbackBusy ? <Spinner /> : 'Rollback'}
-                </button>
+              <div className="mt-3 border-t border-line pt-3 dark:border-slate-800">
+                <div className="flex flex-wrap gap-2 items-center">
+                  <input
+                    className="text-input flex-1 min-w-40 text-xs"
+                    value={promoteReason}
+                    onChange={(e) => setPromoteReason(e.target.value)}
+                    placeholder="Reviewer reason (required)"
+                  />
+                  <button
+                    className="primary-button text-xs"
+                    disabled={!promoteReason.trim() || !!promoteBusy}
+                    onClick={() => void promote(version)}
+                  >
+                    {promoteBusy === version ? <Spinner /> : 'Promote'}
+                  </button>
+                  <button
+                    className="btn-secondary text-xs"
+                    disabled={!promoteReason.trim() || rollbackBusy}
+                    onClick={() => void rollback(modelKey)}
+                  >
+                    {rollbackBusy ? <Spinner /> : 'Rollback'}
+                  </button>
+                </div>
+                <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px]">
+                  <span className="text-muted">Quick reasons:</span>
+                  {['Validated on holdout test set', 'Performance drift observed', 'Quarterly model refresh', 'Emergency rollback'].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      className="rounded bg-slate-100 px-2 py-0.5 text-muted hover:bg-brand/10 hover:text-brand dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors"
+                      onClick={() => setPromoteReason(preset)}
+                    >
+                      + {preset}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-1 text-[10px] text-muted">
+                  Transparency Rule: Model promotions and rollbacks write an immutable audit log. Entering a reviewer rationale ensures audit traceability.
+                </p>
               </div>
             )}
           </div>

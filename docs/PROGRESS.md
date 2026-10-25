@@ -370,6 +370,7 @@
 Academic prototype supply-chain network visualizer delivering an aggregated interactive network where nodes represent cohorts/groups rather than individual orders, enabling clear visual identification of where anomalies and delays originated.
 
 ### 1. Backend Implementation (`src/network/` & `api/main.py`)
+
 - Created `src/network/aggregated_graph.py` with `build_aggregated_supply_network`:
   - Group nodes: `Supplier`, `Product`, `ShipmentGroup` (supplier × week), `Carrier`, `Warehouse`, `CustomerRegion`, `ProcessStage`, and `Other` (clustered tail).
   - Peer-relative health calculation: computes z-score of anomaly rates and prices against peer cohort baselines; assigns `HEALTHY`, `WATCH` (|z| >= 1.5), `PROBLEM` (|z| >= 2.5 or high anomaly severity), or `UNKNOWN`.
@@ -386,6 +387,7 @@ Academic prototype supply-chain network visualizer delivering an aggregated inte
   - Retained all legacy neighborhood and trace endpoints for full backward compatibility.
 
 ### 2. Frontend Implementation (`dashboard/`)
+
 - Installed `cytoscape-dagre`, `dagre`, `cytoscape-fcose`, and `@types/dagre`.
 - Extended TypeScript types in `dashboard/src/api/types.ts` (`AggregatedGraphNode`, `AggregatedGraphEdge`, `AggregatedGraphResponse`, `AggregatedTraceResponse`, `CandidateSource`, `PeerMetricBaseline`) and added client methods in `dashboard/src/api/client.ts`.
 - Rewrote `dashboard/src/components/SupplyGraphScreen.tsx`:
@@ -400,6 +402,7 @@ Academic prototype supply-chain network visualizer delivering an aggregated inte
 - Added CSS classes in `dashboard/src/style.css` for view toggle, pulsing problem animation, candidate chips, time slider, and peer baseline cards.
 
 ### 3. Verification & Real Results
+
 - **Backend Tests**: `tests/test_graph_redesign.py` (6 passed in 9.45s) testing planted faulty supplier identification, weekly health time series, downstream traversal, node capping, missing roles, and multi-tenant isolation.
 - **Full Backend Regression**: 176 passed, 1 skipped, 1 warning in 46.60s.
 - **Frontend Component Tests**: `src/components/SupplyGraphScreen.test.tsx` (4 passed in 288ms).
@@ -410,6 +413,7 @@ Academic prototype supply-chain network visualizer delivering an aggregated inte
   - `npm run build`: built in 15.43s.
 
 ### Graph Redesign Known Limitations
+
 - Node health classification utilizes peer-relative z-score thresholds; absolute domain thresholds require company-specific tuning.
 - Cytoscape layout coordinates are dynamically computed in-browser; very large subgraphs (>300 nodes) should use the default 150-node capping.
 - Upstream and downstream traces traverse established relationships but do not prove causal agency without human reviewer confirmation.
@@ -433,5 +437,69 @@ Academic prototype supply-chain network visualizer delivering an aggregated inte
   11. **Findings File**: Formatted `docs/acceptance_findings.json` to keep it clean and readable (top 10 unhealthy nodes by z-score without weekly time series, exact node/edge counts by type, exact failure details, 0 failures recorded).
   12. **Execution & Documentation**: Rerun full test suite (`test_e2e_acceptance_unseen.py` passed with 0 failures), regenerated `docs/acceptance_findings.json`, and updated `docs/ACCEPTANCE_RESULTS.md`. Added default CORS dev server support for Vite (`http://localhost:5173`) and seeded default accounts (`admin`, `reviewer`, `analyst`, `viewer`).
 
+## Completed: Acceptance Remediation Final Verification & Checkpoint
+
+- **Execution Date**: 2026-10-25
+- **Bug Fixed**: `test_invalid_input_uses_consistent_error_shape` — `HTTPException(422, ...)` now returns the canonical `{"error": {"code": "invalid_request", "message": "Request validation failed", "details": "<reason>"}}` shape consistent with the `RequestValidationError` handler. All 422 responses have a uniform error contract.
+- **Root cause**: The HTTPException handler for 422 used `str(exc.detail)` as the message; the test expected the canonical string "Request validation failed". Fix: 422 HTTPExceptions normalise to the canonical message; original detail moves to `"details"` field.
+- **Full test suite** (excluding long-running acceptance test): **187 passed, 1 skipped, 0 failures** in 134.02s (2:14). Command: `pytest -v --ignore=tests/test_e2e_acceptance_unseen.py`. Results saved to `docs/pytest_run_manual.txt`.
+  - 1 skipped: Arrow/PyArrow lazy-schema test; PyArrow not installed (pre-existing, documented since Stage 1).
+  - Warnings: Starlette/httpx TestClient deprecation, FastAPI on_event deprecation, pandas period timezone UserWarning — all pre-existing, no new regressions.
+- **Git checkpoint**: Repository committed as "Checkpoint after acceptance remediation".
+- **Services**: Backend on `http://127.0.0.1:8000`; Frontend on `http://localhost:5173`.
+- **Default credentials**: `admin` / `AdminPassword123!` (company: `kaveri_foods`).
+
+### Known Limitations (post-remediation)
+
+- `test_e2e_acceptance_unseen.py` is a full ML pipeline acceptance test that takes several minutes. Run separately: `pytest tests/test_e2e_acceptance_unseen.py -v`.
+- The `on_event("shutdown")` FastAPI deprecation: deferred; migrating to the `lifespan` context manager is a future refactor.
+- `src/ml/delay/canonical.py` emits a pandas UserWarning about timezone info drop during `.dt.to_period("W")`. Non-breaking; timezone info is not used in the weekly aggregation.
+
+## Completed: Supply-Chain 3D Network Globe & Acceptance Final Verification
+
+- **Execution Date**: 2026-10-25
+- **Frontend 3D Visualizer (`dashboard/src/components/SupplyGraphScreen.tsx`)**:
+  - Replaced 2D layout with an interactive Three.js 3D supply-chain network globe with dark space background, glowing problem/incident nodes in pulsing red, healthy nodes in emerald, watch nodes in amber, and volume-weighted flow curves.
+  - Interactive mouse controls: drag to orbit/rotate the globe, scroll wheel to zoom, and raycasting click to inspect individual node cohort details, peer comparisons, and upstream/downstream traces.
+  - Filter by node health, search by entity name, filter "Only Problems", and jump-to-time health evolution scrubber.
+  - Updated `SupplyGraphScreen.test.tsx` and `stage9.test.tsx` to align with the Three.js canvas mount and empty project state notices.
+- **Anomaly Detection Vectorization (`src/ml/anomaly/canonical.py`)**:
+  - Vectorized Isolation Forest prediction and scoring across the sample vector per entity group, eliminating per-record single-sample model invocations (`predict([[val]])` and `score_samples([[val]])`).
+  - Pipeline execution speedup: reduced anomaly detection execution time on the unseen Kaveri Foods synthetic dataset from 12+ minutes to under 2 minutes while maintaining identical anomaly classification and sample scores.
+- **Verification Results**:
+  - **Frontend Quality & Build Suite**:
+    - `npm run lint`: **0 errors, 0 warnings**.
+    - `npm run typecheck`: **Clean (0 errors)**.
+    - `npm test -- --run`: **5 test files passed, 33 tests passed** in 6.39s.
+    - `npm run build`: **Built production bundle in 21.06s** with 0 errors.
+  - **Backend Test Suite**:
+    - `pytest -v --ignore=tests/test_e2e_acceptance_unseen.py`: **187 passed, 1 skipped, 0 failures** in 121.95s.
+    - `pytest tests/test_e2e_acceptance_unseen.py -v`: **1 passed in 222.11s (0 failures)**.
+  - **Findings & Acceptance**:
+    - Regenerated [`docs/acceptance_findings.json`](file:///c:/Projects/supply-chain-risk-system/docs/acceptance_findings.json): `failures: 0`, all 4 roles verified (`viewer`, `analyst`, `reviewer`, `admin`), 10 top anomalies ranked by severity and score.
+
+## Completed: Admin Dashboard UX & Transparency Refinements
+
+- **Execution Date**: 2026-10-25
+- **Top Bar API Status Fix**: Updated health check connectivity logic in `dashboard/src/App.tsx` (`health.value?.status === 'ok' || health.value?.status === 'healthy'`). Fixed "API offline" false indicator to show "API online" with active green status dot.
+- **Admin Navigation & Dataset Upload**:
+  - Added `Data Sources & Upload` (`/datasources`) to the Admin role navigation menu in `App.tsx`.
+  - Added primary "+ Upload Dataset" buttons in both the Overview header and the "Data source health" panel to streamline dataset ingestion for company administrators.
+- **Company & Scope Management Overhaul**:
+  - Replaced the three manual text inputs (`#switcher-company-id`, `#switcher-workspace`, `#switcher-project-id`) in the sidebar with a sleek, compact Company Scope badge.
+  - Implemented an interactive `AdminProfileModal` accessible by clicking the Admin profile badge at the bottom of the sidebar or clicking scope details, allowing clean viewing and editing of company scope (`kaveri`), workspace, and project ID (`project-kaveri_foods`).
+- **Supply Chain Map Enhancements**:
+  - Removed the redundant "Locate Red Nodes" button from the 3D globe toolbar; glowing red problem nodes and the "Only Problems (N)" filter provide direct visual identification.
+  - Ensured fallback project ID defaulting to `'project-kaveri_foods'` when opening the Supply Chain Map to prevent empty state notices.
+- **Settings & Audit Log Transparency**:
+  - Upgraded `SettingsScreen`: eliminated manual API URL typing; displayed automated connection status to local FastAPI backend (`http://127.0.0.1:8000`), active Dry-Run execution confirmation, and CPU-optimized runtime specifications.
+  - Upgraded `AuditScreen`: formatted raw event types into human-readable labels (`User Login (Success)`, `Pipeline Ingestion Completed`, etc.), truncated 64-char SHA-256 hashes with copy/hover tooltips, and highlighted cryptographic hash-chain provenance.
+  - Upgraded `SystemHealthScreen`: added quick-select reason templates for model promotions/rollbacks and explanatory tooltips detailing why reviewer rationale is strictly required for regulatory compliance.
+- **Verification**:
+  - `npm run lint`: **0 errors, 0 warnings**.
+  - `npm run typecheck`: **Clean (0 errors)**.
+  - `npm test -- --run`: **5 test files passed, 33 tests passed** in 7.42s.
+  - `npm run build`: **Built production bundle in 16.71s** with 0 errors.
+  - `python -m pytest tests/test_stage10_scenarios.py -q`: **10 passed in 25.77s**.
 
 
