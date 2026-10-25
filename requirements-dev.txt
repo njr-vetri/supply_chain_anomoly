@@ -1,0 +1,5 @@
+# Local lint, security audit, and hook tools, plus the application test/runtime set.
+-r requirements.txt
+ruff==0.17.2
+pip-audit==2.10.1
+pre-commit==4.7.0

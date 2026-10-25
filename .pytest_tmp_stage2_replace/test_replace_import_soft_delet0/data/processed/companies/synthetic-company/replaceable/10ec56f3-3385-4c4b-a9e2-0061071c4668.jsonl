@@ -1,0 +1,2 @@
+{"order_id": "O1", "event_timestamp": "2026-01-01T00:00:00+00:00", "event_id": "O1", "source": "replaceable", "source_record_ref": "10ec56f3-3385-4c4b-a9e2-0061071c4668:0", "custom_fields": {}}
+{"order_id": "O2", "event_timestamp": "2026-01-02T00:00:00+00:00", "event_id": "O2", "source": "replaceable", "source_record_ref": "10ec56f3-3385-4c4b-a9e2-0061071c4668:1", "custom_fields": {}}

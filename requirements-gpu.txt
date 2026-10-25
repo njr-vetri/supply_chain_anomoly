@@ -1,0 +1,5 @@
+# Optional GPU environment only; keep these out of the CPU requirements.txt.
+torch
+transformers
+datasets
+sentence-transformers

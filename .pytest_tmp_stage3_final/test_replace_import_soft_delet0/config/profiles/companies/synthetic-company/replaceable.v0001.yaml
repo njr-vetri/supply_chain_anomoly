@@ -1,0 +1,40 @@
+name: replaceable
+version: v0001
+description: Synthetic mapping
+source_file: 0b67d62f92598814d9d1a297343578b76edf55ae5e8f274ac3f3550866272870_orders-v1.csv
+source_archive_sha256: 0b67d62f92598814d9d1a297343578b76edf55ae5e8f274ac3f3550866272870
+created_at: '2026-10-23T20:36:30.645792Z'
+updated_at: '2026-10-23T20:36:30.645798Z'
+mappings:
+  order_ref: order_id
+  event_time: order_ts
+custom_fields: {}
+units: {}
+time_zone: UTC
+date_format: '%Y-%m-%d'
+capabilities:
+  anomaly_detection:
+    task: anomaly_detection
+    possible: true
+    missing_roles: []
+    reason: Order ID and metric/timeline values present
+  delay_prediction:
+    task: delay_prediction
+    possible: false
+    missing_roles:
+    - promised_ts
+    - delivered_ts (or status)
+    reason: 'Missing required role(s): [''promised_ts'', ''delivered_ts (or status)'']'
+  demand_forecasting:
+    task: demand_forecasting
+    possible: false
+    missing_roles:
+    - product_id
+    - quantity
+    reason: 'Missing required role(s): [''product_id'', ''quantity'']'
+  graph:
+    task: graph
+    possible: false
+    missing_roles:
+    - supplier_id, product_id, or carrier
+    reason: 'Missing required role(s): [''supplier_id, product_id, or carrier'']'

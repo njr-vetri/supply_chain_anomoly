@@ -1,0 +1,24 @@
+{
+  "current_model_versions": {
+    "synthetic:linear": "synthetic-v1"
+  },
+  "models": [
+    {
+      "dataset": "synthetic",
+      "lifecycle": "CURRENT",
+      "name": "linear",
+      "version": "synthetic-v1"
+    }
+  ],
+  "promotion_history": [
+    {
+      "at": "2026-10-24T06:21:40.670586+00:00",
+      "event": "MODEL_INITIALIZED",
+      "from_version": null,
+      "model_key": "synthetic:linear",
+      "reason": "synthetic initial approval",
+      "reviewer": "synthetic-reviewer",
+      "to_version": "synthetic-v1"
+    }
+  ]
+}

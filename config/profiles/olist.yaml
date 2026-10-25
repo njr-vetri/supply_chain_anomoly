@@ -1,0 +1,38 @@
+name: olist
+version: '1.0'
+description: Olist e-commerce dataset order and delivery lifecycle profile
+source_file: archive (1).zip
+source_archive_sha256: 967E41E04FC306FE604E2A693F488995A8B41E5047418F8A5C8E4ABD6DECA784
+created_at: '2026-10-23T00:00:00Z'
+updated_at: '2026-10-23T00:00:00Z'
+mappings:
+  order_id: order_id
+  order_purchase_timestamp: order_ts
+  order_estimated_delivery_date: promised_ts
+  order_delivered_customer_date: delivered_ts
+  order_status: status
+  seller_id: supplier_id
+  product_id: product_id
+  price: price
+capabilities:
+  anomaly_detection:
+    task: anomaly_detection
+    possible: true
+    missing_roles: []
+    reason: Order ID and metric/timeline values present
+  delay_prediction:
+    task: delay_prediction
+    possible: true
+    missing_roles: []
+    reason: Promised timestamp and delivery outcome present
+  demand_forecasting:
+    task: demand_forecasting
+    possible: false
+    missing_roles:
+    - quantity
+    reason: 'Missing required role(s): [''quantity'']'
+  graph:
+    task: graph
+    possible: true
+    missing_roles: []
+    reason: Order ID and network entity present

@@ -1,0 +1,42 @@
+name: sales
+version: v0001
+description: Kaveri Foods mapping for sales
+source_file: 8749f2125b3abb0aca81c2d15ab3db108dca0cef98867381b36482eb566b2c29_sales.csv
+source_archive_sha256: 8749f2125b3abb0aca81c2d15ab3db108dca0cef98867381b36482eb566b2c29
+created_at: '2026-10-24T16:57:42.279895Z'
+updated_at: '2026-10-24T16:57:42.279907Z'
+mappings:
+  sale_date: order_ts
+  sku: product_id
+  units_sold: quantity
+custom_fields: {}
+units: {}
+time_zone: null
+date_format: null
+capabilities:
+  anomaly_detection:
+    task: anomaly_detection
+    possible: false
+    missing_roles:
+    - order_id
+    reason: 'Missing required role(s): [''order_id'']'
+  delay_prediction:
+    task: delay_prediction
+    possible: false
+    missing_roles:
+    - order_id
+    - promised_ts
+    - delivered_ts (or status)
+    reason: 'Missing required role(s): [''order_id'', ''promised_ts'', ''delivered_ts
+      (or status)'']'
+  demand_forecasting:
+    task: demand_forecasting
+    possible: true
+    missing_roles: []
+    reason: Product ID, order quantity, and timestamps present
+  graph:
+    task: graph
+    possible: false
+    missing_roles:
+    - order_id
+    reason: 'Missing required role(s): [''order_id'']'

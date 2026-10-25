@@ -1,0 +1,24 @@
+{
+  "dataset": "olist",
+  "source_archive": "synthetic_olist.zip",
+  "source_sha256": "8e5a0614c8a7747e12dae31344ab71063a70b07c1bc5892804010db604ce9c8f",
+  "transform_steps": [
+    "read member directly from ZIP",
+    "validate required fields/dates/duplicates",
+    "write valid and quarantined rows separately"
+  ],
+  "created_at": "2026-10-23T20:49:01.584015+00:00",
+  "members": [
+    {
+      "member": "olist_synthetic.csv",
+      "rows_read": 2,
+      "valid_rows": 2,
+      "quarantined_rows": 0,
+      "outputs": [
+        "olist_synthetic_0_valid.csv",
+        "olist_synthetic_0_quarantine.csv",
+        "olist_synthetic_0_quality.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+name: vendors
+version: v0001
+description: Kaveri Foods mapping for vendors
+source_file: 0b792846b9778fd33d8353b8fb9f6e45780a59283adcfa562a4d55fed0b3c309_vendors.csv
+source_archive_sha256: 0b792846b9778fd33d8353b8fb9f6e45780a59283adcfa562a4d55fed0b3c309
+created_at: '2026-10-24T16:57:42.081138Z'
+updated_at: '2026-10-24T16:57:42.081143Z'
+mappings:
+  vendor_code: supplier_id
+  vendor_name: supplier_name
+  country: region
+custom_fields: {}
+units: {}
+time_zone: null
+date_format: null
+capabilities:
+  anomaly_detection:
+    task: anomaly_detection
+    possible: false
+    missing_roles:
+    - order_id
+    - quantity or price or timestamp
+    reason: 'Missing required role(s): [''order_id'', ''quantity or price or timestamp'']'
+  delay_prediction:
+    task: delay_prediction
+    possible: false
+    missing_roles:
+    - order_id
+    - promised_ts
+    - delivered_ts (or status)
+    reason: 'Missing required role(s): [''order_id'', ''promised_ts'', ''delivered_ts
+      (or status)'']'
+  demand_forecasting:
+    task: demand_forecasting
+    possible: false
+    missing_roles:
+    - product_id
+    - quantity
+    - order_ts or delivered_ts
+    reason: 'Missing required role(s): [''product_id'', ''quantity'', ''order_ts or
+      delivered_ts'']'
+  graph:
+    task: graph
+    possible: false
+    missing_roles:
+    - order_id
+    reason: 'Missing required role(s): [''order_id'']'

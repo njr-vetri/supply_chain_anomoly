@@ -1,0 +1,15 @@
+{
+  "source_sha256": "0b67d62f92598814d9d1a297343578b76edf55ae5e8f274ac3f3550866272870",
+  "mapping_version": "v0001",
+  "mode": "append",
+  "rows": 2,
+  "transforms": [
+    "source-column mapping",
+    "custom_fields preservation",
+    "event provenance"
+  ],
+  "units": {},
+  "time_zone": "UTC",
+  "date_format": "%Y-%m-%d",
+  "created_at": "2026-10-23T20:38:33.508266+00:00"
+}

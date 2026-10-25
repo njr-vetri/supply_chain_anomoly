@@ -1,0 +1,17 @@
+{
+  "record_ref": "synthetic-record",
+  "explanation_type": "rule_explanation",
+  "method": "rule",
+  "baseline": null,
+  "rule": {
+    "threshold": 10
+  },
+  "features": {
+    "quantity": 20
+  },
+  "model_version": null,
+  "note": "contribution, not cause",
+  "limitations": [
+    "This explanation describes the decision rule or baseline only."
+  ]
+}

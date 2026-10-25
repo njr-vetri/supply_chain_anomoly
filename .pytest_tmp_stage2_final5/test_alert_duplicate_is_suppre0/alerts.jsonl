@@ -1,0 +1,3 @@
+{"event": "alert_routed", "source": "synthetic", "incident_key": "incident-1", "severity": "HIGH", "message": "untrusted inert text", "group_id": "c26c93e200abb3f0", "first_seen": "2025-01-01T00:00:00+00:00", "last_seen": "2025-01-01T00:00:00+00:00", "status": "ROUTED", "routes": ["console", "file"]}
+{"event": "duplicate_suppressed", "group_id": "c26c93e200abb3f0", "source": "synthetic", "incident_key": "incident-1", "at": "2025-01-01T00:00:01+00:00", "duplicate_count": 1}
+{"event": "duplicate_suppressed", "group_id": "c26c93e200abb3f0", "source": "synthetic", "incident_key": "incident-1", "at": "2025-01-01T00:00:02+00:00", "duplicate_count": 2}

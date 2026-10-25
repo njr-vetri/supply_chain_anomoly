@@ -1,0 +1,51 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Dataset archives and data files
+*.zip
+*.7z
+*.rar
+data/**
+!data/**/.gitkeep
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.parquet
+*.feather
+*.db
+*.sqlite*
+!tests/fixtures/synthetic/kaveri_foods/**
+
+# Model artifacts and run outputs
+models/
+*.pkl
+*.joblib
+*.onnx
+mlruns/
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest_tmp/
+.mypy_cache/
+.ruff_cache/
+.pre-commit-cache/
+.venv/
+venv/
+ENV/
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Frontend install and build output
+dashboard/node_modules/
+dashboard/dist/
+dashboard/.vite/
+dashboard/*.tsbuildinfo

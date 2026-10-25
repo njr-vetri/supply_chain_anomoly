@@ -1,0 +1,516 @@
+{
+  "models": [
+    {
+      "artifact": "C:\\Projects\\supply-chain-risk-system\\.pytest_tmp_stage7\\test_evaluation_saves_reproduc0\\models\\synthetic-baseline_majority-v1.joblib",
+      "config": {
+        "random_forest_estimators": 3,
+        "random_seed": 7,
+        "simple_rule_feature": "signal",
+        "simple_rule_threshold": 0,
+        "train_fraction": 0.6,
+        "tree_max_depth": 2,
+        "validation_fraction": 0.2
+      },
+      "data_hash": "synthetic-input-hash",
+      "dataset": "synthetic",
+      "evaluation_context": {
+        "method": "chronological",
+        "test_data_hash": "25b9e54b3901e631e7a1ed130c4d450f14d31b681ee94b690cf1a5d9c2fc9218",
+        "test_end": "2025-03-01 00:00:00",
+        "test_rows": 12,
+        "test_start": "2025-02-18 00:00:00",
+        "timestamp": "event_time"
+      },
+      "features": [
+        "signal"
+      ],
+      "label": "label",
+      "lifecycle": "CANDIDATE",
+      "metrics": {
+        "test": {
+          "brier_score": 0.5,
+          "calibration_curve": [
+            {
+              "fraction_positive": 0.5,
+              "mean_predicted_probability": 0.0
+            }
+          ],
+          "confusion_matrix_labels_0_1": [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "f1": 0.0,
+          "macro_f1": 0.3333333333333333,
+          "pr_auc": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "roc_auc": 0.5,
+          "threshold": 0.5
+        },
+        "test_subgroup_errors": {
+          "synthetic-a": {
+            "false_negative_rate": 1.0,
+            "false_positive_rate": null,
+            "rows": 6
+          },
+          "synthetic-b": {
+            "false_negative_rate": null,
+            "false_positive_rate": 0.0,
+            "rows": 6
+          }
+        },
+        "validation": {
+          "brier_score": 0.5,
+          "calibration_curve": [
+            {
+              "fraction_positive": 0.5,
+              "mean_predicted_probability": 0.0
+            }
+          ],
+          "confusion_matrix_labels_0_1": [
+            [
+              6,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "f1": 0.0,
+          "macro_f1": 0.3333333333333333,
+          "pr_auc": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "roc_auc": 0.5,
+          "threshold": 0.5
+        }
+      },
+      "name": "baseline_majority",
+      "registered_at": "2026-10-24T06:11:11.901913+00:00",
+      "version": "synthetic-baseline_majority-v1"
+    },
+    {
+      "artifact": null,
+      "config": {
+        "random_forest_estimators": 3,
+        "random_seed": 7,
+        "simple_rule_feature": "signal",
+        "simple_rule_threshold": 0,
+        "train_fraction": 0.6,
+        "tree_max_depth": 2,
+        "validation_fraction": 0.2
+      },
+      "data_hash": "synthetic-input-hash",
+      "dataset": "synthetic",
+      "evaluation_context": {
+        "method": "chronological",
+        "test_data_hash": "25b9e54b3901e631e7a1ed130c4d450f14d31b681ee94b690cf1a5d9c2fc9218",
+        "test_end": "2025-03-01 00:00:00",
+        "test_rows": 12,
+        "test_start": "2025-02-18 00:00:00",
+        "timestamp": "event_time"
+      },
+      "features": [
+        "signal"
+      ],
+      "label": "label",
+      "lifecycle": "CANDIDATE",
+      "metrics": {
+        "test": {
+          "brier_score": 1.0,
+          "calibration_curve": [
+            {
+              "fraction_positive": 1.0,
+              "mean_predicted_probability": 0.0
+            },
+            {
+              "fraction_positive": 0.0,
+              "mean_predicted_probability": 1.0
+            }
+          ],
+          "confusion_matrix_labels_0_1": [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "f1": 0.0,
+          "macro_f1": 0.0,
+          "pr_auc": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "roc_auc": 0.0,
+          "threshold": 0.5
+        },
+        "test_subgroup_errors": {
+          "synthetic-a": {
+            "false_negative_rate": 1.0,
+            "false_positive_rate": null,
+            "rows": 6
+          },
+          "synthetic-b": {
+            "false_negative_rate": null,
+            "false_positive_rate": 1.0,
+            "rows": 6
+          }
+        },
+        "validation": {
+          "brier_score": 1.0,
+          "calibration_curve": [
+            {
+              "fraction_positive": 1.0,
+              "mean_predicted_probability": 0.0
+            },
+            {
+              "fraction_positive": 0.0,
+              "mean_predicted_probability": 1.0
+            }
+          ],
+          "confusion_matrix_labels_0_1": [
+            [
+              0,
+              6
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "f1": 0.0,
+          "macro_f1": 0.0,
+          "pr_auc": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "roc_auc": 0.0,
+          "threshold": 0.5
+        }
+      },
+      "name": "baseline_simple_rule",
+      "registered_at": "2026-10-24T06:11:11.987213+00:00",
+      "version": "synthetic-baseline_simple_rule-v1"
+    },
+    {
+      "artifact": "C:\\Projects\\supply-chain-risk-system\\.pytest_tmp_stage7\\test_evaluation_saves_reproduc0\\models\\synthetic-logistic_regression-v1.joblib",
+      "config": {
+        "random_forest_estimators": 3,
+        "random_seed": 7,
+        "simple_rule_feature": "signal",
+        "simple_rule_threshold": 0,
+        "train_fraction": 0.6,
+        "tree_max_depth": 2,
+        "validation_fraction": 0.2
+      },
+      "data_hash": "synthetic-input-hash",
+      "dataset": "synthetic",
+      "evaluation_context": {
+        "method": "chronological",
+        "test_data_hash": "25b9e54b3901e631e7a1ed130c4d450f14d31b681ee94b690cf1a5d9c2fc9218",
+        "test_end": "2025-03-01 00:00:00",
+        "test_rows": 12,
+        "test_start": "2025-02-18 00:00:00",
+        "timestamp": "event_time"
+      },
+      "features": [
+        "signal"
+      ],
+      "label": "label",
+      "lifecycle": "CANDIDATE",
+      "metrics": {
+        "test": {
+          "brier_score": 0.005084268551433124,
+          "calibration_curve": [
+            {
+              "fraction_positive": 0.0,
+              "mean_predicted_probability": 0.07130405704749988
+            },
+            {
+              "fraction_positive": 1.0,
+              "mean_predicted_probability": 0.9286959429525
+            }
+          ],
+          "confusion_matrix_labels_0_1": [
+            [
+              6,
+              0
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "f1": 1.0,
+          "macro_f1": 1.0,
+          "pr_auc": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "roc_auc": 1.0,
+          "threshold": 0.5
+        },
+        "test_subgroup_errors": {
+          "synthetic-a": {
+            "false_negative_rate": 0.0,
+            "false_positive_rate": null,
+            "rows": 6
+          },
+          "synthetic-b": {
+            "false_negative_rate": null,
+            "false_positive_rate": 0.0,
+            "rows": 6
+          }
+        },
+        "validation": {
+          "brier_score": 0.005084268551433124,
+          "calibration_curve": [
+            {
+              "fraction_positive": 0.0,
+              "mean_predicted_probability": 0.07130405704749988
+            },
+            {
+              "fraction_positive": 1.0,
+              "mean_predicted_probability": 0.9286959429525
+            }
+          ],
+          "confusion_matrix_labels_0_1": [
+            [
+              6,
+              0
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "f1": 1.0,
+          "macro_f1": 1.0,
+          "pr_auc": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "roc_auc": 1.0,
+          "threshold": 0.5
+        }
+      },
+      "name": "logistic_regression",
+      "registered_at": "2026-10-24T06:11:12.133177+00:00",
+      "version": "synthetic-logistic_regression-v1"
+    },
+    {
+      "artifact": "C:\\Projects\\supply-chain-risk-system\\.pytest_tmp_stage7\\test_evaluation_saves_reproduc0\\models\\synthetic-decision_tree-v1.joblib",
+      "config": {
+        "random_forest_estimators": 3,
+        "random_seed": 7,
+        "simple_rule_feature": "signal",
+        "simple_rule_threshold": 0,
+        "train_fraction": 0.6,
+        "tree_max_depth": 2,
+        "validation_fraction": 0.2
+      },
+      "data_hash": "synthetic-input-hash",
+      "dataset": "synthetic",
+      "evaluation_context": {
+        "method": "chronological",
+        "test_data_hash": "25b9e54b3901e631e7a1ed130c4d450f14d31b681ee94b690cf1a5d9c2fc9218",
+        "test_end": "2025-03-01 00:00:00",
+        "test_rows": 12,
+        "test_start": "2025-02-18 00:00:00",
+        "timestamp": "event_time"
+      },
+      "features": [
+        "signal"
+      ],
+      "label": "label",
+      "lifecycle": "CANDIDATE",
+      "metrics": {
+        "test": {
+          "brier_score": 0.0,
+          "calibration_curve": [
+            {
+              "fraction_positive": 0.0,
+              "mean_predicted_probability": 0.0
+            },
+            {
+              "fraction_positive": 1.0,
+              "mean_predicted_probability": 1.0
+            }
+          ],
+          "confusion_matrix_labels_0_1": [
+            [
+              6,
+              0
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "f1": 1.0,
+          "macro_f1": 1.0,
+          "pr_auc": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "roc_auc": 1.0,
+          "threshold": 0.5
+        },
+        "test_subgroup_errors": {
+          "synthetic-a": {
+            "false_negative_rate": 0.0,
+            "false_positive_rate": null,
+            "rows": 6
+          },
+          "synthetic-b": {
+            "false_negative_rate": null,
+            "false_positive_rate": 0.0,
+            "rows": 6
+          }
+        },
+        "validation": {
+          "brier_score": 0.0,
+          "calibration_curve": [
+            {
+              "fraction_positive": 0.0,
+              "mean_predicted_probability": 0.0
+            },
+            {
+              "fraction_positive": 1.0,
+              "mean_predicted_probability": 1.0
+            }
+          ],
+          "confusion_matrix_labels_0_1": [
+            [
+              6,
+              0
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "f1": 1.0,
+          "macro_f1": 1.0,
+          "pr_auc": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "roc_auc": 1.0,
+          "threshold": 0.5
+        }
+      },
+      "name": "decision_tree",
+      "registered_at": "2026-10-24T06:11:12.230785+00:00",
+      "version": "synthetic-decision_tree-v1"
+    },
+    {
+      "artifact": "C:\\Projects\\supply-chain-risk-system\\.pytest_tmp_stage7\\test_evaluation_saves_reproduc0\\models\\synthetic-random_forest-v1.joblib",
+      "config": {
+        "random_forest_estimators": 3,
+        "random_seed": 7,
+        "simple_rule_feature": "signal",
+        "simple_rule_threshold": 0,
+        "train_fraction": 0.6,
+        "tree_max_depth": 2,
+        "validation_fraction": 0.2
+      },
+      "data_hash": "synthetic-input-hash",
+      "dataset": "synthetic",
+      "evaluation_context": {
+        "method": "chronological",
+        "test_data_hash": "25b9e54b3901e631e7a1ed130c4d450f14d31b681ee94b690cf1a5d9c2fc9218",
+        "test_end": "2025-03-01 00:00:00",
+        "test_rows": 12,
+        "test_start": "2025-02-18 00:00:00",
+        "timestamp": "event_time"
+      },
+      "features": [
+        "signal"
+      ],
+      "label": "label",
+      "lifecycle": "CANDIDATE",
+      "metrics": {
+        "test": {
+          "brier_score": 0.0,
+          "calibration_curve": [
+            {
+              "fraction_positive": 0.0,
+              "mean_predicted_probability": 0.0
+            },
+            {
+              "fraction_positive": 1.0,
+              "mean_predicted_probability": 1.0
+            }
+          ],
+          "confusion_matrix_labels_0_1": [
+            [
+              6,
+              0
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "f1": 1.0,
+          "macro_f1": 1.0,
+          "pr_auc": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "roc_auc": 1.0,
+          "threshold": 0.5
+        },
+        "test_subgroup_errors": {
+          "synthetic-a": {
+            "false_negative_rate": 0.0,
+            "false_positive_rate": null,
+            "rows": 6
+          },
+          "synthetic-b": {
+            "false_negative_rate": null,
+            "false_positive_rate": 0.0,
+            "rows": 6
+          }
+        },
+        "validation": {
+          "brier_score": 0.0,
+          "calibration_curve": [
+            {
+              "fraction_positive": 0.0,
+              "mean_predicted_probability": 0.0
+            },
+            {
+              "fraction_positive": 1.0,
+              "mean_predicted_probability": 1.0
+            }
+          ],
+          "confusion_matrix_labels_0_1": [
+            [
+              6,
+              0
+            ],
+            [
+              0,
+              6
+            ]
+          ],
+          "f1": 1.0,
+          "macro_f1": 1.0,
+          "pr_auc": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "roc_auc": 1.0,
+          "threshold": 0.5
+        }
+      },
+      "name": "random_forest",
+      "registered_at": "2026-10-24T06:11:12.359972+00:00",
+      "version": "synthetic-random_forest-v1"
+    }
+  ]
+}

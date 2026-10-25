@@ -1,0 +1,1353 @@
+{
+  "random_seed": 42,
+  "classification": {
+    "olist": {
+      "dataset": "olist_delay",
+      "split": {
+        "method": "chronological",
+        "train_rows": 57882,
+        "validation_rows": 19294,
+        "test_rows": 19294,
+        "train_end": "2018-03-03 10:06:23+00:00",
+        "validation_end": "2018-05-26 18:16:57+00:00",
+        "test_start": "2018-05-26 18:18:03+00:00"
+      },
+      "models": {
+        "baseline_majority": {
+          "validation": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "macro_f1": 0.4691575414075827,
+            "pr_auc": 0.11620192806053696,
+            "roc_auc": 0.5,
+            "confusion_matrix_labels_0_1": [
+              [
+                17052,
+                0
+              ],
+              [
+                2242,
+                0
+              ]
+            ],
+            "brier_score": 0.11620192806053696,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.0,
+                "fraction_positive": 0.11620192806053696
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "macro_f1": 0.48641094577687866,
+            "pr_auc": 0.05291800559759511,
+            "roc_auc": 0.5,
+            "confusion_matrix_labels_0_1": [
+              [
+                18273,
+                0
+              ],
+              [
+                1021,
+                0
+              ]
+            ],
+            "brier_score": 0.05291800559759511,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.0,
+                "fraction_positive": 0.05291800559759511
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test_subgroup_errors": {
+            "2018": {
+              "rows": 19294,
+              "false_positive_rate": 0.0,
+              "false_negative_rate": 1.0
+            }
+          }
+        },
+        "baseline_simple_rule": {
+          "validation": {
+            "precision": 0.1021659174499387,
+            "recall": 0.11150758251561106,
+            "f1": 0.10663254425250586,
+            "macro_f1": 0.4915297887491622,
+            "pr_auc": 0.11463680644918567,
+            "roc_auc": 0.4913331954332688,
+            "confusion_matrix_labels_0_1": [
+              [
+                14855,
+                2197
+              ],
+              [
+                1992,
+                250
+              ]
+            ],
+            "brier_score": 0.21711412874468747,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.0,
+                "fraction_positive": 0.11824063631507094
+              },
+              {
+                "mean_predicted_probability": 1.0,
+                "fraction_positive": 0.1021659174499387
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test": {
+            "precision": 0.1687289088863892,
+            "recall": 0.5876591576885406,
+            "f1": 0.26218046755516716,
+            "macro_f1": 0.5814445309167444,
+            "pr_auc": 0.12097534347543688,
+            "roc_auc": 0.7129452139342938,
+            "confusion_matrix_labels_0_1": [
+              [
+                15317,
+                2956
+              ],
+              [
+                421,
+                600
+              ]
+            ],
+            "brier_score": 0.1750285062713797,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.0,
+                "fraction_positive": 0.026750540094039904
+              },
+              {
+                "mean_predicted_probability": 1.0,
+                "fraction_positive": 0.1687289088863892
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test_subgroup_errors": {
+            "2018": {
+              "rows": 19294,
+              "false_positive_rate": 0.16176872981995294,
+              "false_negative_rate": 0.41234084231145934
+            }
+          }
+        },
+        "logistic_regression": {
+          "validation": {
+            "precision": 0.2222222222222222,
+            "recall": 0.0008920606601248885,
+            "f1": 0.001776988005330964,
+            "macro_f1": 0.46996959590981247,
+            "pr_auc": 0.1343183074145983,
+            "roc_auc": 0.5584849946315232,
+            "confusion_matrix_labels_0_1": [
+              [
+                17045,
+                7
+              ],
+              [
+                2240,
+                2
+              ]
+            ],
+            "brier_score": 0.10316400288369884,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.07690461879290252,
+                "fraction_positive": 0.10361067503924647
+              },
+              {
+                "mean_predicted_probability": 0.12753796443677232,
+                "fraction_positive": 0.1407035175879397
+              },
+              {
+                "mean_predicted_probability": 0.21920589417952205,
+                "fraction_positive": 0.14285714285714285
+              },
+              {
+                "mean_predicted_probability": 0.34640471987990124,
+                "fraction_positive": 0.07692307692307693
+              },
+              {
+                "mean_predicted_probability": 0.43602091046333125,
+                "fraction_positive": 0.0
+              },
+              {
+                "mean_predicted_probability": 0.5233550458292681,
+                "fraction_positive": 0.0
+              },
+              {
+                "mean_predicted_probability": 0.6400526316586819,
+                "fraction_positive": 0.25
+              },
+              {
+                "mean_predicted_probability": 0.7755516402260415,
+                "fraction_positive": 0.0
+              },
+              {
+                "mean_predicted_probability": 0.9059934976237476,
+                "fraction_positive": 1.0
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "macro_f1": 0.4863836017569546,
+            "pr_auc": 0.07258112644112336,
+            "roc_auc": 0.6201039056516487,
+            "confusion_matrix_labels_0_1": [
+              [
+                18271,
+                2
+              ],
+              [
+                1021,
+                0
+              ]
+            ],
+            "brier_score": 0.05153097754671182,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.07158646354131716,
+                "fraction_positive": 0.04542970351140866
+              },
+              {
+                "mean_predicted_probability": 0.1310538083257028,
+                "fraction_positive": 0.07518094793369134
+              },
+              {
+                "mean_predicted_probability": 0.22288926890317798,
+                "fraction_positive": 0.09264305177111716
+              },
+              {
+                "mean_predicted_probability": 0.33337377451076544,
+                "fraction_positive": 0.0
+              },
+              {
+                "mean_predicted_probability": 0.6474386007008208,
+                "fraction_positive": 0.0
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test_subgroup_errors": {
+            "2018": {
+              "rows": 19294,
+              "false_positive_rate": 0.0001094511027198599,
+              "false_negative_rate": 1.0
+            }
+          }
+        },
+        "decision_tree": {
+          "validation": {
+            "precision": 0.14625,
+            "recall": 0.052185548617305975,
+            "f1": 0.07692307692307693,
+            "macro_f1": 0.4989634233431004,
+            "pr_auc": 0.12967934079691185,
+            "roc_auc": 0.5325922303462589,
+            "confusion_matrix_labels_0_1": [
+              [
+                16369,
+                683
+              ],
+              [
+                2125,
+                117
+              ]
+            ],
+            "brier_score": 0.13269349429191818,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.05073608151540724,
+                "fraction_positive": 0.10513749382512762
+              },
+              {
+                "mean_predicted_probability": 0.1296532999258879,
+                "fraction_positive": 0.12994652406417112
+              },
+              {
+                "mean_predicted_probability": 0.22899748009008355,
+                "fraction_positive": 0.15560640732265446
+              },
+              {
+                "mean_predicted_probability": 0.3379520538020159,
+                "fraction_positive": 0.16521739130434782
+              },
+              {
+                "mean_predicted_probability": 0.46281256219580574,
+                "fraction_positive": 0.14606741573033707
+              },
+              {
+                "mean_predicted_probability": 0.5825889164598848,
+                "fraction_positive": 0.11538461538461539
+              },
+              {
+                "mean_predicted_probability": 0.676392572944297,
+                "fraction_positive": 0.1724137931034483
+              },
+              {
+                "mean_predicted_probability": 0.775,
+                "fraction_positive": 0.5
+              },
+              {
+                "mean_predicted_probability": 0.82590051457976,
+                "fraction_positive": 0.07547169811320754
+              },
+              {
+                "mean_predicted_probability": 1.0,
+                "fraction_positive": 0.1563467492260062
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test": {
+            "precision": 0.17713118938233793,
+            "recall": 0.33986287952987265,
+            "f1": 0.23288590604026846,
+            "macro_f1": 0.5843434248242232,
+            "pr_auc": 0.10773915154682995,
+            "roc_auc": 0.5830824453563226,
+            "confusion_matrix_labels_0_1": [
+              [
+                16661,
+                1612
+              ],
+              [
+                674,
+                347
+              ]
+            ],
+            "brier_score": 0.11759362702156763,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.04434827760551593,
+                "fraction_positive": 0.040272657717187174
+              },
+              {
+                "mean_predicted_probability": 0.13240501015795544,
+                "fraction_positive": 0.027151051625239005
+              },
+              {
+                "mean_predicted_probability": 0.23683174031360316,
+                "fraction_positive": 0.10135135135135136
+              },
+              {
+                "mean_predicted_probability": 0.34054385192516445,
+                "fraction_positive": 0.05555555555555555
+              },
+              {
+                "mean_predicted_probability": 0.45027865841384873,
+                "fraction_positive": 0.015625
+              },
+              {
+                "mean_predicted_probability": 0.5940604198668721,
+                "fraction_positive": 0.14285714285714285
+              },
+              {
+                "mean_predicted_probability": 0.6419546636937937,
+                "fraction_positive": 0.0
+              },
+              {
+                "mean_predicted_probability": 0.8,
+                "fraction_positive": 0.0
+              },
+              {
+                "mean_predicted_probability": 0.833333333333333,
+                "fraction_positive": 0.0
+              },
+              {
+                "mean_predicted_probability": 1.0,
+                "fraction_positive": 0.18540866703236422
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test_subgroup_errors": {
+            "2018": {
+              "rows": 19294,
+              "false_positive_rate": 0.08821758879220708,
+              "false_negative_rate": 0.6601371204701273
+            }
+          }
+        },
+        "random_forest": {
+          "validation": {
+            "precision": 0.1439567859554355,
+            "recall": 0.47546833184656556,
+            "f1": 0.22100134756919249,
+            "macro_f1": 0.4806675650461283,
+            "pr_auc": 0.14680499363250576,
+            "roc_auc": 0.5700879301242168,
+            "confusion_matrix_labels_0_1": [
+              [
+                10713,
+                6339
+              ],
+              [
+                1176,
+                1066
+              ]
+            ],
+            "brier_score": 0.22735420515361987,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.05909615486089996,
+                "fraction_positive": 0.08163265306122448
+              },
+              {
+                "mean_predicted_probability": 0.1524299095328113,
+                "fraction_positive": 0.0798611111111111
+              },
+              {
+                "mean_predicted_probability": 0.25481766604641537,
+                "fraction_positive": 0.08538587848932677
+              },
+              {
+                "mean_predicted_probability": 0.35207626521397317,
+                "fraction_positive": 0.09473094170403587
+              },
+              {
+                "mean_predicted_probability": 0.45340643985160123,
+                "fraction_positive": 0.1133553173948887
+              },
+              {
+                "mean_predicted_probability": 0.5458275597534111,
+                "fraction_positive": 0.13614687649022414
+              },
+              {
+                "mean_predicted_probability": 0.6411107977354902,
+                "fraction_positive": 0.14860070949940876
+              },
+              {
+                "mean_predicted_probability": 0.7379984869113039,
+                "fraction_positive": 0.15370018975332067
+              },
+              {
+                "mean_predicted_probability": 0.8319434581447749,
+                "fraction_positive": 0.23809523809523808
+              },
+              {
+                "mean_predicted_probability": 0.9367123709178253,
+                "fraction_positive": 0.3333333333333333
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test": {
+            "precision": 0.04904559915164369,
+            "recall": 0.1811949069539667,
+            "f1": 0.0771959107031087,
+            "macro_f1": 0.4731592809914419,
+            "pr_auc": 0.053212703344567285,
+            "roc_auc": 0.4906639066979197,
+            "confusion_matrix_labels_0_1": [
+              [
+                14686,
+                3587
+              ],
+              [
+                836,
+                185
+              ]
+            ],
+            "brier_score": 0.1749001652843584,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.05546988791210544,
+                "fraction_positive": 0.016683022571148183
+              },
+              {
+                "mean_predicted_probability": 0.1524258106952317,
+                "fraction_positive": 0.06474820143884892
+              },
+              {
+                "mean_predicted_probability": 0.25489173104824125,
+                "fraction_positive": 0.06057529610829103
+              },
+              {
+                "mean_predicted_probability": 0.348377147152487,
+                "fraction_positive": 0.05947357846092023
+              },
+              {
+                "mean_predicted_probability": 0.45173620999314507,
+                "fraction_positive": 0.04600874166091557
+              },
+              {
+                "mean_predicted_probability": 0.5412217804597231,
+                "fraction_positive": 0.046923417441345726
+              },
+              {
+                "mean_predicted_probability": 0.6411380349486768,
+                "fraction_positive": 0.042086001829826164
+              },
+              {
+                "mean_predicted_probability": 0.7396277818461677,
+                "fraction_positive": 0.06876790830945559
+              },
+              {
+                "mean_predicted_probability": 0.8244135158456442,
+                "fraction_positive": 0.1323529411764706
+              },
+              {
+                "mean_predicted_probability": 0.9240289059826363,
+                "fraction_positive": 0.0
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test_subgroup_errors": {
+            "2018": {
+              "rows": 19294,
+              "false_positive_rate": 0.19630055272806873,
+              "false_negative_rate": 0.8188050930460333
+            }
+          }
+        }
+      }
+    },
+    "dataco": {
+      "dataset": "dataco_delay",
+      "split": {
+        "method": "chronological",
+        "train_rows": 108311,
+        "validation_rows": 36103,
+        "test_rows": 36105,
+        "train_end": "2016-09-24 21:11:00+00:00",
+        "validation_end": "2017-04-22 15:17:00+00:00",
+        "test_start": "2017-04-22 15:17:00+00:00"
+      },
+      "models": {
+        "baseline_majority": {
+          "validation": {
+            "precision": 0.5462149959837133,
+            "recall": 1.0,
+            "f1": 0.706518818408183,
+            "macro_f1": 0.3532594092040915,
+            "pr_auc": 0.5462149959837133,
+            "roc_auc": 0.5,
+            "confusion_matrix_labels_0_1": [
+              [
+                0,
+                16383
+              ],
+              [
+                0,
+                19720
+              ]
+            ],
+            "brier_score": 0.45378500401628674,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 1.0,
+                "fraction_positive": 0.5462149959837133
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test": {
+            "precision": 0.546572496884088,
+            "recall": 1.0,
+            "f1": 0.706817815505292,
+            "macro_f1": 0.353408907752646,
+            "pr_auc": 0.546572496884088,
+            "roc_auc": 0.5,
+            "confusion_matrix_labels_0_1": [
+              [
+                0,
+                16371
+              ],
+              [
+                0,
+                19734
+              ]
+            ],
+            "brier_score": 0.4534275031159119,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 1.0,
+                "fraction_positive": 0.546572496884088
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test_subgroup_errors": {
+            "Caribbean": {
+              "rows": 1349,
+              "false_positive_rate": 1.0,
+              "false_negative_rate": 0.0
+            },
+            "Central America": {
+              "rows": 5273,
+              "false_positive_rate": 1.0,
+              "false_negative_rate": 0.0
+            },
+            "Eastern Asia": {
+              "rows": 1316,
+              "false_positive_rate": 1.0,
+              "false_negative_rate": 0.0
+            },
+            "Northern Europe": {
+              "rows": 4360,
+              "false_positive_rate": 1.0,
+              "false_negative_rate": 0.0
+            },
+            "Oceania": {
+              "rows": 1436,
+              "false_positive_rate": 1.0,
+              "false_negative_rate": 0.0
+            },
+            "South America": {
+              "rows": 2960,
+              "false_positive_rate": 1.0,
+              "false_negative_rate": 0.0
+            },
+            "South Asia": {
+              "rows": 1119,
+              "false_positive_rate": 1.0,
+              "false_negative_rate": 0.0
+            },
+            "Southeast Asia": {
+              "rows": 1749,
+              "false_positive_rate": 1.0,
+              "false_negative_rate": 0.0
+            },
+            "Southern Europe": {
+              "rows": 4192,
+              "false_positive_rate": 1.0,
+              "false_negative_rate": 0.0
+            },
+            "Western Europe": {
+              "rows": 12351,
+              "false_positive_rate": 1.0,
+              "false_negative_rate": 0.0
+            }
+          }
+        },
+        "baseline_simple_rule": {
+          "validation": {
+            "precision": 0.7953488372093023,
+            "recall": 0.5809837728194727,
+            "f1": 0.6714725274725275,
+            "macro_f1": 0.6885368729639626,
+            "pr_auc": 0.6909577149959634,
+            "roc_auc": 0.7005205746841672,
+            "confusion_matrix_labels_0_1": [
+              [
+                13435,
+                2948
+              ],
+              [
+                8263,
+                11457
+              ]
+            ],
+            "brier_score": 0.31052821095199845,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.0,
+                "fraction_positive": 0.38081850861830585
+              },
+              {
+                "mean_predicted_probability": 1.0,
+                "fraction_positive": 0.7953488372093023
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test": {
+            "precision": 0.7965635738831615,
+            "recall": 0.5873112394851525,
+            "f1": 0.6761171391902928,
+            "macro_f1": 0.6916682305137773,
+            "pr_auc": 0.693395066176642,
+            "roc_auc": 0.7032518569913698,
+            "confusion_matrix_labels_0_1": [
+              [
+                13411,
+                2960
+              ],
+              [
+                8144,
+                11590
+              ]
+            ],
+            "brier_score": 0.30754743110372523,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.0,
+                "fraction_positive": 0.3778241707260496
+              },
+              {
+                "mean_predicted_probability": 1.0,
+                "fraction_positive": 0.7965635738831615
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test_subgroup_errors": {
+            "Caribbean": {
+              "rows": 1349,
+              "false_positive_rate": 0.18618618618618618,
+              "false_negative_rate": 0.4407027818448023
+            },
+            "Central America": {
+              "rows": 5273,
+              "false_positive_rate": 0.1697401508801341,
+              "false_negative_rate": 0.4392102528576377
+            },
+            "Eastern Asia": {
+              "rows": 1316,
+              "false_positive_rate": 0.1833616298811545,
+              "false_negative_rate": 0.4195323246217332
+            },
+            "Northern Europe": {
+              "rows": 4360,
+              "false_positive_rate": 0.18493150684931506,
+              "false_negative_rate": 0.4356649395509499
+            },
+            "Oceania": {
+              "rows": 1436,
+              "false_positive_rate": 0.19409937888198758,
+              "false_negative_rate": 0.4015151515151515
+            },
+            "South America": {
+              "rows": 2960,
+              "false_positive_rate": 0.21278140885984023,
+              "false_negative_rate": 0.42766898294377764
+            },
+            "South Asia": {
+              "rows": 1119,
+              "false_positive_rate": 0.16463414634146342,
+              "false_negative_rate": 0.39074960127591707
+            },
+            "Southeast Asia": {
+              "rows": 1749,
+              "false_positive_rate": 0.16752577319587628,
+              "false_negative_rate": 0.42548818088386436
+            },
+            "Southern Europe": {
+              "rows": 4192,
+              "false_positive_rate": 0.16322204557498676,
+              "false_negative_rate": 0.3891540130151844
+            },
+            "Western Europe": {
+              "rows": 12351,
+              "false_positive_rate": 0.18294010889292195,
+              "false_negative_rate": 0.39614091507089605
+            }
+          }
+        },
+        "logistic_regression": {
+          "validation": {
+            "precision": 0.8459569703271215,
+            "recall": 0.5363590263691683,
+            "f1": 0.6564876020233994,
+            "macro_f1": 0.6898224719468471,
+            "pr_auc": 0.7944743989544142,
+            "roc_auc": 0.7259764797254958,
+            "confusion_matrix_labels_0_1": [
+              [
+                14457,
+                1926
+              ],
+              [
+                9143,
+                10577
+              ]
+            ],
+            "brier_score": 0.19665492066806406,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.37535298019434776,
+                "fraction_positive": 0.3797926211719315
+              },
+              {
+                "mean_predicted_probability": 0.4482439036991289,
+                "fraction_positive": 0.44258289703315884
+              },
+              {
+                "mean_predicted_probability": 0.5484988492762232,
+                "fraction_positive": 0.22580645161290322
+              },
+              {
+                "mean_predicted_probability": 0.7644544501770928,
+                "fraction_positive": 0.7616052710392333
+              },
+              {
+                "mean_predicted_probability": 0.835406581469413,
+                "fraction_positive": 0.7897196261682243
+              },
+              {
+                "mean_predicted_probability": 0.95392408777308,
+                "fraction_positive": 0.9565687511263291
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test": {
+            "precision": 0.8421094432531173,
+            "recall": 0.5372960372960373,
+            "f1": 0.6560247486465584,
+            "macro_f1": 0.688624133129848,
+            "pr_auc": 0.7906064896183613,
+            "roc_auc": 0.7279537892452298,
+            "confusion_matrix_labels_0_1": [
+              [
+                14383,
+                1988
+              ],
+              [
+                9131,
+                10603
+              ]
+            ],
+            "brier_score": 0.19763461592206613,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.38293578040779963,
+                "fraction_positive": 0.3778241707260496
+              },
+              {
+                "mean_predicted_probability": 0.4451311854701104,
+                "fraction_positive": 0.5038284839203675
+              },
+              {
+                "mean_predicted_probability": 0.7700970324952725,
+                "fraction_positive": 0.7612555034796193
+              },
+              {
+                "mean_predicted_probability": 0.9549112516995921,
+                "fraction_positive": 0.9446846846846847
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test_subgroup_errors": {
+            "Caribbean": {
+              "rows": 1349,
+              "false_positive_rate": 0.12912912912912913,
+              "false_negative_rate": 0.48755490483162517
+            },
+            "Central America": {
+              "rows": 5273,
+              "false_positive_rate": 0.11148365465213747,
+              "false_negative_rate": 0.47835122965015586
+            },
+            "Eastern Asia": {
+              "rows": 1316,
+              "false_positive_rate": 0.11714770797962648,
+              "false_negative_rate": 0.469050894085282
+            },
+            "Northern Europe": {
+              "rows": 4360,
+              "false_positive_rate": 0.12622309197651663,
+              "false_negative_rate": 0.4848877374784111
+            },
+            "Oceania": {
+              "rows": 1436,
+              "false_positive_rate": 0.12111801242236025,
+              "false_negative_rate": 0.4684343434343434
+            },
+            "South America": {
+              "rows": 2960,
+              "false_positive_rate": 0.1437908496732026,
+              "false_negative_rate": 0.45356917245735945
+            },
+            "South Asia": {
+              "rows": 1119,
+              "false_positive_rate": 0.11178861788617886,
+              "false_negative_rate": 0.4529505582137161
+            },
+            "Southeast Asia": {
+              "rows": 1749,
+              "false_positive_rate": 0.11597938144329897,
+              "false_negative_rate": 0.4645426515930113
+            },
+            "Southern Europe": {
+              "rows": 4192,
+              "false_positive_rate": 0.10651828298887123,
+              "false_negative_rate": 0.4542299349240781
+            },
+            "Western Europe": {
+              "rows": 12351,
+              "false_positive_rate": 0.12468239564428313,
+              "false_negative_rate": 0.45037275252156117
+            }
+          }
+        },
+        "decision_tree": {
+          "validation": {
+            "precision": 0.79171622472539,
+            "recall": 0.5738336713995943,
+            "f1": 0.6653926439890631,
+            "macro_f1": 0.683703050976282,
+            "pr_auc": 0.7732398573119884,
+            "roc_auc": 0.7216841788208946,
+            "confusion_matrix_labels_0_1": [
+              [
+                13406,
+                2977
+              ],
+              [
+                8404,
+                11316
+              ]
+            ],
+            "brier_score": 0.20293462833906414,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.008841732979664015,
+                "fraction_positive": 0.3806706114398422
+              },
+              {
+                "mean_predicted_probability": 0.1513323278029161,
+                "fraction_positive": 0.4703703703703704
+              },
+              {
+                "mean_predicted_probability": 0.2402993031459142,
+                "fraction_positive": 0.4613003095975232
+              },
+              {
+                "mean_predicted_probability": 0.37260370919212643,
+                "fraction_positive": 0.37886136004217186
+              },
+              {
+                "mean_predicted_probability": 0.46155609165653033,
+                "fraction_positive": 0.44449626865671643
+              },
+              {
+                "mean_predicted_probability": 0.5341566587580256,
+                "fraction_positive": 0.4382716049382716
+              },
+              {
+                "mean_predicted_probability": 0.628503877377576,
+                "fraction_positive": 0.49899799599198397
+              },
+              {
+                "mean_predicted_probability": 0.7563867781143234,
+                "fraction_positive": 0.7520986808291931
+              },
+              {
+                "mean_predicted_probability": 0.8575014976272234,
+                "fraction_positive": 0.8276098901098901
+              },
+              {
+                "mean_predicted_probability": 0.9640800946448411,
+                "fraction_positive": 0.9445853658536585
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test": {
+            "precision": 0.8263017863930064,
+            "recall": 0.5508259856085943,
+            "f1": 0.6610112803672961,
+            "macro_f1": 0.6887366109117576,
+            "pr_auc": 0.7833790967641993,
+            "roc_auc": 0.7212518797359969,
+            "confusion_matrix_labels_0_1": [
+              [
+                14086,
+                2285
+              ],
+              [
+                8864,
+                10870
+              ]
+            ],
+            "brier_score": 0.19923746714705529,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.1851373778351466,
+                "fraction_positive": 0.5862068965517241
+              },
+              {
+                "mean_predicted_probability": 0.2639160852958904,
+                "fraction_positive": 0.5475409836065573
+              },
+              {
+                "mean_predicted_probability": 0.3781665735900957,
+                "fraction_positive": 0.38245191100396764
+              },
+              {
+                "mean_predicted_probability": 0.43411503346924424,
+                "fraction_positive": 0.39338781575037146
+              },
+              {
+                "mean_predicted_probability": 0.5430697009735628,
+                "fraction_positive": 0.4854111405835544
+              },
+              {
+                "mean_predicted_probability": 0.6522588150089866,
+                "fraction_positive": 0.6193353474320241
+              },
+              {
+                "mean_predicted_probability": 0.758798730124571,
+                "fraction_positive": 0.7530487804878049
+              },
+              {
+                "mean_predicted_probability": 0.8444040126383151,
+                "fraction_positive": 0.8081395348837209
+              },
+              {
+                "mean_predicted_probability": 0.9655671728560417,
+                "fraction_positive": 0.9461089127567364
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test_subgroup_errors": {
+            "Caribbean": {
+              "rows": 1349,
+              "false_positive_rate": 0.14114114114114115,
+              "false_negative_rate": 0.4670571010248902
+            },
+            "Central America": {
+              "rows": 5273,
+              "false_positive_rate": 0.12992455993294216,
+              "false_negative_rate": 0.47384828541738827
+            },
+            "Eastern Asia": {
+              "rows": 1316,
+              "false_positive_rate": 0.13752122241086587,
+              "false_negative_rate": 0.4594222833562586
+            },
+            "Northern Europe": {
+              "rows": 4360,
+              "false_positive_rate": 0.12622309197651663,
+              "false_negative_rate": 0.4848877374784111
+            },
+            "Oceania": {
+              "rows": 1436,
+              "false_positive_rate": 0.13043478260869565,
+              "false_negative_rate": 0.4431818181818182
+            },
+            "South America": {
+              "rows": 2960,
+              "false_positive_rate": 0.19607843137254902,
+              "false_negative_rate": 0.4327226784586229
+            },
+            "South Asia": {
+              "rows": 1119,
+              "false_positive_rate": 0.13008130081300814,
+              "false_negative_rate": 0.4433811802232855
+            },
+            "Southeast Asia": {
+              "rows": 1749,
+              "false_positive_rate": 0.12757731958762886,
+              "false_negative_rate": 0.45323741007194246
+            },
+            "Southern Europe": {
+              "rows": 4192,
+              "false_positive_rate": 0.13672496025437203,
+              "false_negative_rate": 0.43947939262472885
+            },
+            "Western Europe": {
+              "rows": 12351,
+              "false_positive_rate": 0.13920145190562613,
+              "false_negative_rate": 0.4315158602543488
+            }
+          }
+        },
+        "random_forest": {
+          "validation": {
+            "precision": 0.8304057681982051,
+            "recall": 0.5489858012170385,
+            "f1": 0.6609884910095553,
+            "macro_f1": 0.689742895660675,
+            "pr_auc": 0.7953791487307019,
+            "roc_auc": 0.72372389736603,
+            "confusion_matrix_labels_0_1": [
+              [
+                14172,
+                2211
+              ],
+              [
+                8894,
+                10826
+              ]
+            ],
+            "brier_score": 0.19992879000523675,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.1487627314007684,
+                "fraction_positive": 0.37777777777777777
+              },
+              {
+                "mean_predicted_probability": 0.2529777014873001,
+                "fraction_positive": 0.4359375
+              },
+              {
+                "mean_predicted_probability": 0.3357648995188599,
+                "fraction_positive": 0.37740238721424235
+              },
+              {
+                "mean_predicted_probability": 0.4270973334297818,
+                "fraction_positive": 0.44437904649793997
+              },
+              {
+                "mean_predicted_probability": 0.5326182818329291,
+                "fraction_positive": 0.5630252100840336
+              },
+              {
+                "mean_predicted_probability": 0.6630928766219866,
+                "fraction_positive": 0.6612595419847328
+              },
+              {
+                "mean_predicted_probability": 0.7370413834788008,
+                "fraction_positive": 0.760481160445781
+              },
+              {
+                "mean_predicted_probability": 0.8539749235899922,
+                "fraction_positive": 0.8408342480790341
+              },
+              {
+                "mean_predicted_probability": 0.9522114912383776,
+                "fraction_positive": 0.9603393843725335
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test": {
+            "precision": 0.8397607429560837,
+            "recall": 0.5406911928651059,
+            "f1": 0.657829839704069,
+            "macro_f1": 0.6893624933999349,
+            "pr_auc": 0.7883454343167225,
+            "roc_auc": 0.7247030193405412,
+            "confusion_matrix_labels_0_1": [
+              [
+                14335,
+                2036
+              ],
+              [
+                9064,
+                10670
+              ]
+            ],
+            "brier_score": 0.19978844696131234,
+            "calibration_curve": [
+              {
+                "mean_predicted_probability": 0.2624245774802411,
+                "fraction_positive": 0.5
+              },
+              {
+                "mean_predicted_probability": 0.3365901853463596,
+                "fraction_positive": 0.38404436096950184
+              },
+              {
+                "mean_predicted_probability": 0.43784790981428273,
+                "fraction_positive": 0.45063879210220675
+              },
+              {
+                "mean_predicted_probability": 0.5253224470508067,
+                "fraction_positive": 0.5384615384615384
+              },
+              {
+                "mean_predicted_probability": 0.6856820896968844,
+                "fraction_positive": 0.7522935779816514
+              },
+              {
+                "mean_predicted_probability": 0.7354980100828136,
+                "fraction_positive": 0.7615933412604042
+              },
+              {
+                "mean_predicted_probability": 0.868404352876904,
+                "fraction_positive": 0.8730964467005076
+              },
+              {
+                "mean_predicted_probability": 0.9531482159704484,
+                "fraction_positive": 0.9470445646093605
+              }
+            ],
+            "threshold": 0.5
+          },
+          "test_subgroup_errors": {
+            "Caribbean": {
+              "rows": 1349,
+              "false_positive_rate": 0.14714714714714713,
+              "false_negative_rate": 0.4582723279648609
+            },
+            "Central America": {
+              "rows": 5273,
+              "false_positive_rate": 0.11148365465213747,
+              "false_negative_rate": 0.47835122965015586
+            },
+            "Eastern Asia": {
+              "rows": 1316,
+              "false_positive_rate": 0.11714770797962648,
+              "false_negative_rate": 0.469050894085282
+            },
+            "Northern Europe": {
+              "rows": 4360,
+              "false_positive_rate": 0.12622309197651663,
+              "false_negative_rate": 0.4848877374784111
+            },
+            "Oceania": {
+              "rows": 1436,
+              "false_positive_rate": 0.12111801242236025,
+              "false_negative_rate": 0.4684343434343434
+            },
+            "South America": {
+              "rows": 2960,
+              "false_positive_rate": 0.1568627450980392,
+              "false_negative_rate": 0.44472520530638027
+            },
+            "South Asia": {
+              "rows": 1119,
+              "false_positive_rate": 0.12804878048780488,
+              "false_negative_rate": 0.4449760765550239
+            },
+            "Southeast Asia": {
+              "rows": 1749,
+              "false_positive_rate": 0.11597938144329897,
+              "false_negative_rate": 0.4645426515930113
+            },
+            "Southern Europe": {
+              "rows": 4192,
+              "false_positive_rate": 0.11181770005299417,
+              "false_negative_rate": 0.4420824295010846
+            },
+            "Western Europe": {
+              "rows": 12351,
+              "false_positive_rate": 0.12468239564428313,
+              "false_negative_rate": 0.45037275252156117
+            }
+          }
+        }
+      }
+    }
+  },
+  "demand_forecasting": {
+    "task": "demand forecasting",
+    "not_stockout_prediction": true,
+    "sheets": {
+      "online_retail_II.xlsx [Year 2009-2010]": {
+        "naive": {
+          "fold_mae": [
+            37.84085380208742,
+            46.01427764781802,
+            48.73104710528851
+          ],
+          "mean_mae": 44.19539285173132
+        },
+        "moving_average": {
+          "fold_mae": [
+            34.516983180308145,
+            38.704390847247986,
+            39.9907121985679
+          ],
+          "mean_mae": 37.737362075374676
+        },
+        "seasonal_naive": {
+          "fold_mae": [],
+          "mean_mae": null
+        },
+        "baselines_run": [
+          "moving_average",
+          "naive"
+        ],
+        "baselines_skipped": [
+          {
+            "name": "seasonal_naive",
+            "reason": "Insufficient history for seasonal period: 54 weeks <= 52 + 4 window"
+          }
+        ],
+        "folds": [
+          {
+            "train_through": "2010-09-13 00:00:00",
+            "test_start": "2010-09-20 00:00:00",
+            "test_end": "2010-10-11 00:00:00"
+          },
+          {
+            "train_through": "2010-10-11 00:00:00",
+            "test_start": "2010-10-18 00:00:00",
+            "test_end": "2010-11-08 00:00:00"
+          },
+          {
+            "train_through": "2010-11-08 00:00:00",
+            "test_start": "2010-11-15 00:00:00",
+            "test_end": "2010-12-06 00:00:00"
+          }
+        ],
+        "metric": "MAE",
+        "cv_adapted": false,
+        "configured_folds": 3,
+        "configured_horizon": 4,
+        "adapted_folds": 3,
+        "adapted_horizon": 4
+      },
+      "online_retail_II.xlsx [Year 2010-2011]": {
+        "naive": {
+          "fold_mae": [
+            41.458608855779694,
+            38.76817569841804,
+            47.54281663516068
+          ],
+          "mean_mae": 42.58986706311947
+        },
+        "moving_average": {
+          "fold_mae": [
+            34.242459752797075,
+            37.9046827667452,
+            40.76053875236295
+          ],
+          "mean_mae": 37.635893757301744
+        },
+        "seasonal_naive": {
+          "fold_mae": [],
+          "mean_mae": null
+        },
+        "baselines_run": [
+          "moving_average",
+          "naive"
+        ],
+        "baselines_skipped": [
+          {
+            "name": "seasonal_naive",
+            "reason": "Insufficient history for seasonal period: 54 weeks <= 52 + 4 window"
+          }
+        ],
+        "folds": [
+          {
+            "train_through": "2011-09-12 00:00:00",
+            "test_start": "2011-09-19 00:00:00",
+            "test_end": "2011-10-10 00:00:00"
+          },
+          {
+            "train_through": "2011-10-10 00:00:00",
+            "test_start": "2011-10-17 00:00:00",
+            "test_end": "2011-11-07 00:00:00"
+          },
+          {
+            "train_through": "2011-11-07 00:00:00",
+            "test_start": "2011-11-14 00:00:00",
+            "test_end": "2011-12-05 00:00:00"
+          }
+        ],
+        "metric": "MAE",
+        "cv_adapted": false,
+        "configured_folds": 3,
+        "configured_horizon": 4,
+        "adapted_folds": 3,
+        "adapted_horizon": 4
+      }
+    }
+  },
+  "limitations": []
+}

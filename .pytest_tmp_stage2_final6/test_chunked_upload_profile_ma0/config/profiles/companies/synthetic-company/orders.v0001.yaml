@@ -1,0 +1,41 @@
+name: orders
+version: v0001
+description: Synthetic review
+source_file: 8ffa14259a6335824531ea79608ea2fbeaaaa7e92fbb74b740ec2f78d6889aaf_orders.csv
+source_archive_sha256: 8ffa14259a6335824531ea79608ea2fbeaaaa7e92fbb74b740ec2f78d6889aaf
+created_at: '2026-10-23T20:29:43.686914Z'
+updated_at: '2026-10-23T20:29:43.686922Z'
+mappings:
+  Order Ref: order_id
+  Event Date: order_ts
+custom_fields:
+  vendor_ref: Vendor Ref
+units: {}
+time_zone: UTC
+date_format: '%Y-%m-%d'
+capabilities:
+  anomaly_detection:
+    task: anomaly_detection
+    possible: true
+    missing_roles: []
+    reason: Order ID and metric/timeline values present
+  delay_prediction:
+    task: delay_prediction
+    possible: false
+    missing_roles:
+    - promised_ts
+    - delivered_ts (or status)
+    reason: 'Missing required role(s): [''promised_ts'', ''delivered_ts (or status)'']'
+  demand_forecasting:
+    task: demand_forecasting
+    possible: false
+    missing_roles:
+    - product_id
+    - quantity
+    reason: 'Missing required role(s): [''product_id'', ''quantity'']'
+  graph:
+    task: graph
+    possible: false
+    missing_roles:
+    - supplier_id, product_id, or carrier
+    reason: 'Missing required role(s): [''supplier_id, product_id, or carrier'']'

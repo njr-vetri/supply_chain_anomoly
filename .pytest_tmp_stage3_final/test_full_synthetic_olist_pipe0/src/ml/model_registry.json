@@ -1,0 +1,1 @@
+{"models": [{"dataset": "olist_delay", "name": "logistic_regression", "artifact": "models/olist_delay-logistic_regression-v1.joblib", "registered_at": "2020-01-01T00:00:00+00:00"}]}

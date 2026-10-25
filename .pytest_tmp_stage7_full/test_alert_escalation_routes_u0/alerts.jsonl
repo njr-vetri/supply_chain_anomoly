@@ -1,0 +1,2 @@
+{"event": "alert_routed", "source": "synthetic", "incident_key": "group", "severity": "MEDIUM", "group_id": "2deca0881840cea5", "first_seen": "2025-01-01T00:00:00+00:00", "last_seen": "2025-01-01T00:00:00+00:00", "status": "ROUTED", "routes": []}
+{"event": "alert_routed", "source": "synthetic", "incident_key": "group", "severity": "HIGH", "group_id": "2deca0881840cea5", "first_seen": "2025-01-01T00:00:00+00:00", "last_seen": "2025-01-01T00:00:11+00:00", "status": "ROUTED", "routes": ["console"]}

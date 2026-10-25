@@ -1,0 +1,1187 @@
+{
+  "dataset": "SYNTHETIC Kaveri Foods",
+  "steps": {
+    "setup_company_a": "COMPLETED",
+    "xlsx_multisheet": {
+      "status": "AWAITING_IMPORT_DECISION",
+      "skipped_sheets": [
+        {
+          "sheet_name": "notes",
+          "reason": "Non-tabular sheet (unstructured notes / 1 column(s))"
+        }
+      ],
+      "sheets_summary": [
+        {
+          "sheet_name": "vendors",
+          "status": "IMPORTED",
+          "reason": "Tabular data table"
+        },
+        {
+          "sheet_name": "notes",
+          "status": "SKIPPED",
+          "reason": "Non-tabular sheet (unstructured notes / 1 column(s))"
+        }
+      ]
+    },
+    "multi_table_zip": {
+      "table_count": 3,
+      "tables": [
+        "purchase_orders",
+        "shipments",
+        "vendors"
+      ]
+    },
+    "main_uploads": [
+      "purchase_orders",
+      "shipments",
+      "vendors",
+      "sales"
+    ],
+    "mappings": "CONFIRMED_BY_ANALYST",
+    "relationship_preview": [
+      {
+        "left_source_id": "af2a0700-6b0d-4a02-8298-12ddcec27503",
+        "left_key": "po_number",
+        "right_source_id": "c88533ed-cfb5-48c3-b8cf-b2ac2b8631ca",
+        "right_key": "po_number",
+        "relationship": "order_shipment",
+        "matched_left_rows": 6030,
+        "matched_right_rows": 6000,
+        "orphan_left_rows": 0,
+        "orphan_right_rows": 25,
+        "invalid_left_references": 0,
+        "invalid_right_references": 0
+      },
+      {
+        "left_source_id": "af2a0700-6b0d-4a02-8298-12ddcec27503",
+        "left_key": "vendor_code",
+        "right_source_id": "1eeba1fb-ac16-447a-93af-0bdb67cf98f9",
+        "right_key": "vendor_code",
+        "relationship": "supplier_order",
+        "matched_left_rows": 6020,
+        "matched_right_rows": 24,
+        "orphan_left_rows": 10,
+        "orphan_right_rows": 0,
+        "invalid_left_references": 0,
+        "invalid_right_references": 0
+      }
+    ],
+    "relationship_approval": "APPROVED_BY_ANALYST",
+    "pipeline_run": {
+      "id": "7d459ea9-c76d-4d8b-9e7e-c7c8d0eadd8b",
+      "status": "COMPLETED"
+    }
+  },
+  "data_quality": {
+    "project_id": "project-kaveri_foods",
+    "summary": {
+      "exact_duplicate_rows": 30,
+      "negative_values": 18,
+      "invalid_dates": 15,
+      "blank_required_values": 40,
+      "unknown_foreign_keys": 10,
+      "orphan_rows": 25,
+      "open_records": 150,
+      "extreme_outliers": 50,
+      "quarantined_rows": 15
+    },
+    "datasets": {
+      "vendors_excel": {
+        "dataset_name": "vendors_excel",
+        "total_rows": 24,
+        "exact_duplicate_rows": 0,
+        "negative_values": 0,
+        "invalid_dates": 0,
+        "blank_required_values": 0,
+        "open_records": 0,
+        "extreme_outliers": 0,
+        "quarantined_rows": 0
+      },
+      "purchase_orders": {
+        "dataset_name": "purchase_orders",
+        "total_rows": 6030,
+        "exact_duplicate_rows": 30,
+        "negative_values": 18,
+        "invalid_dates": 15,
+        "blank_required_values": 40,
+        "open_records": 0,
+        "extreme_outliers": 43,
+        "quarantined_rows": 15
+      },
+      "shipments": {
+        "dataset_name": "shipments",
+        "total_rows": 6025,
+        "exact_duplicate_rows": 0,
+        "negative_values": 0,
+        "invalid_dates": 0,
+        "blank_required_values": 0,
+        "open_records": 150,
+        "extreme_outliers": 0,
+        "quarantined_rows": 0
+      },
+      "vendors": {
+        "dataset_name": "vendors",
+        "total_rows": 24,
+        "exact_duplicate_rows": 0,
+        "negative_values": 0,
+        "invalid_dates": 0,
+        "blank_required_values": 0,
+        "open_records": 0,
+        "extreme_outliers": 0,
+        "quarantined_rows": 0
+      },
+      "sales": {
+        "dataset_name": "sales",
+        "total_rows": 43860,
+        "exact_duplicate_rows": 0,
+        "negative_values": 0,
+        "invalid_dates": 0,
+        "blank_required_values": 0,
+        "open_records": 0,
+        "extreme_outliers": 7,
+        "quarantined_rows": 0
+      }
+    },
+    "quarantined_rows": {
+      "vendors_excel": 0,
+      "purchase_orders": 15,
+      "shipments": 0,
+      "vendors": 0,
+      "sales": 0
+    }
+  },
+  "capabilities": {
+    "features": {
+      "anomaly_detection": {
+        "status": "AVAILABLE_WITH_LIMITATIONS",
+        "missing_roles": [],
+        "extra_data_to_unlock": [
+          "Mapped numeric measures and dated event records improve coverage."
+        ],
+        "limitations": [
+          "Mapped roles indicate potential capability; they do not establish model quality."
+        ]
+      },
+      "delay_prediction": {
+        "status": "AVAILABLE_WITH_LIMITATIONS",
+        "missing_roles": [],
+        "extra_data_to_unlock": [
+          "Mapped roles: order_id, event_timestamp, promised_timestamp, delivered_timestamp."
+        ],
+        "limitations": [
+          "Mapped roles indicate potential capability; they do not establish model quality."
+        ]
+      },
+      "demand_analysis": {
+        "status": "AVAILABLE",
+        "missing_roles": [],
+        "extra_data_to_unlock": [
+          "Mapped roles: product_id, quantity, event_timestamp."
+        ],
+        "limitations": []
+      },
+      "inventory_risk": {
+        "status": "UNSUPPORTED",
+        "missing_roles": [
+          "inventory_snapshot",
+          "on_hand_quantity",
+          "warehouse_id"
+        ],
+        "extra_data_to_unlock": [
+          "Inventory snapshots with product_id, warehouse_id, on-hand quantity, and observation time."
+        ],
+        "limitations": []
+      },
+      "dependency_graph": {
+        "status": "AVAILABLE",
+        "missing_roles": [],
+        "extra_data_to_unlock": [
+          "Approved order, supplier, product, shipment, carrier, and warehouse relationship keys."
+        ],
+        "limitations": []
+      },
+      "model_evaluation": {
+        "status": "AVAILABLE_WITH_LIMITATIONS",
+        "missing_roles": [],
+        "extra_data_to_unlock": [
+          "Mapped delay prediction roles (order_id, event_timestamp, promised_timestamp, delivered_timestamp)."
+        ],
+        "limitations": [
+          "Mapped roles indicate potential capability; they do not establish model quality."
+        ]
+      }
+    },
+    "approved_mapping_count": 4,
+    "canonical_roles": [
+      "carrier",
+      "delivered_timestamp",
+      "event_timestamp",
+      "order_id",
+      "price",
+      "product_id",
+      "promised_timestamp",
+      "quantity",
+      "region",
+      "route",
+      "shipment_id",
+      "status",
+      "supplier_id",
+      "supplier_name",
+      "warehouse_id"
+    ],
+    "project_id": "project-kaveri_foods"
+  },
+  "top_anomalies": [
+    {
+      "entity": {
+        "product_id": "SKU-1012"
+      },
+      "entity_grouping": [
+        "product_id"
+      ],
+      "record_refs": [
+        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:149"
+      ],
+      "metric": "quantity",
+      "observed_value": 7480,
+      "baseline": 20,
+      "expected_range": {
+        "lower": 13.25,
+        "upper": 27.25
+      },
+      "method": "rule",
+      "version": "canonical-anomaly-v1",
+      "severity": "CRITICAL",
+      "score": 7460.0,
+      "limitations": [
+        "An anomaly is an unusual value, not evidence of cause or operational severity.",
+        "Seasonal baselines are used only when configured minimum matching periods exist.",
+        "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
+      ],
+      "seasonal_baseline_used": 0,
+      "id": "95428153-fff7-4739-83cc-ffe5c8d2ec13",
+      "created_at": "2026-10-24T17:16:20.779906",
+      "source": "canonical_pipeline",
+      "detector": "rule",
+      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:149",
+      "feature": "quantity"
+    },
+    {
+      "entity": {
+        "product_id": "SKU-1012"
+      },
+      "entity_grouping": [
+        "product_id"
+      ],
+      "record_refs": [
+        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:149"
+      ],
+      "metric": "quantity",
+      "observed_value": 7480,
+      "baseline": 20,
+      "expected_range": {
+        "lower": 13.25,
+        "upper": 27.25
+      },
+      "method": "iqr",
+      "version": "canonical-anomaly-v1",
+      "severity": "CRITICAL",
+      "score": 7452.75,
+      "limitations": [
+        "An anomaly is an unusual value, not evidence of cause or operational severity.",
+        "Seasonal baselines are used only when configured minimum matching periods exist.",
+        "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
+      ],
+      "seasonal_baseline_used": 0,
+      "id": "b513a708-efc2-40f7-8c24-73498fdd46c7",
+      "created_at": "2026-10-24T17:16:20.787205",
+      "source": "canonical_pipeline",
+      "detector": "iqr",
+      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:149",
+      "feature": "quantity"
+    },
+    {
+      "entity": {
+        "product_id": "SKU-1060"
+      },
+      "entity_grouping": [
+        "product_id"
+      ],
+      "record_refs": [
+        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554"
+      ],
+      "metric": "quantity",
+      "observed_value": 7120,
+      "baseline": 34.5,
+      "expected_range": {
+        "lower": 13.125,
+        "upper": 58.125
+      },
+      "method": "rule",
+      "version": "canonical-anomaly-v1",
+      "severity": "CRITICAL",
+      "score": 7085.5,
+      "limitations": [
+        "An anomaly is an unusual value, not evidence of cause or operational severity.",
+        "Seasonal baselines are used only when configured minimum matching periods exist.",
+        "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
+      ],
+      "seasonal_baseline_used": 0,
+      "id": "1af9eeda-1145-4eb8-952f-a31d5d72b51f",
+      "created_at": "2026-10-24T17:16:20.793383",
+      "source": "canonical_pipeline",
+      "detector": "rule",
+      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554",
+      "feature": "quantity"
+    },
+    {
+      "entity": {
+        "product_id": "SKU-1060"
+      },
+      "entity_grouping": [
+        "product_id"
+      ],
+      "record_refs": [
+        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554"
+      ],
+      "metric": "quantity",
+      "observed_value": 7120,
+      "baseline": 34.5,
+      "expected_range": {
+        "lower": 13.125,
+        "upper": 58.125
+      },
+      "method": "iqr",
+      "version": "canonical-anomaly-v1",
+      "severity": "CRITICAL",
+      "score": 7061.875,
+      "limitations": [
+        "An anomaly is an unusual value, not evidence of cause or operational severity.",
+        "Seasonal baselines are used only when configured minimum matching periods exist.",
+        "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
+      ],
+      "seasonal_baseline_used": 0,
+      "id": "acd5858f-e5c2-4fd8-b0a2-9f6aab22260d",
+      "created_at": "2026-10-24T17:16:20.799582",
+      "source": "canonical_pipeline",
+      "detector": "iqr",
+      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554",
+      "feature": "quantity"
+    },
+    {
+      "entity": {
+        "supplier_id": "V003"
+      },
+      "entity_grouping": [
+        "supplier_id"
+      ],
+      "record_refs": [
+        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554"
+      ],
+      "metric": "quantity",
+      "observed_value": 7120,
+      "baseline": 99,
+      "expected_range": {
+        "lower": 0.0,
+        "upper": 235.25
+      },
+      "method": "rule",
+      "version": "canonical-anomaly-v1",
+      "severity": "CRITICAL",
+      "score": 7021.0,
+      "limitations": [
+        "An anomaly is an unusual value, not evidence of cause or operational severity.",
+        "Seasonal baselines are used only when configured minimum matching periods exist.",
+        "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
+      ],
+      "seasonal_baseline_used": 0,
+      "id": "dffcfdeb-f747-459f-b3c8-0f0bb4669bdd",
+      "created_at": "2026-10-24T17:16:20.806558",
+      "source": "canonical_pipeline",
+      "detector": "rule",
+      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554",
+      "feature": "quantity"
+    },
+    {
+      "entity": {
+        "supplier_id": "V003"
+      },
+      "entity_grouping": [
+        "supplier_id"
+      ],
+      "record_refs": [
+        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554"
+      ],
+      "metric": "quantity",
+      "observed_value": 7120,
+      "baseline": 99,
+      "expected_range": {
+        "lower": 0.0,
+        "upper": 235.25
+      },
+      "method": "iqr",
+      "version": "canonical-anomaly-v1",
+      "severity": "CRITICAL",
+      "score": 6884.75,
+      "limitations": [
+        "An anomaly is an unusual value, not evidence of cause or operational severity.",
+        "Seasonal baselines are used only when configured minimum matching periods exist.",
+        "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
+      ],
+      "seasonal_baseline_used": 0,
+      "id": "5452a051-9bc6-4977-ace8-1bd67191185f",
+      "created_at": "2026-10-24T17:16:20.813998",
+      "source": "canonical_pipeline",
+      "detector": "iqr",
+      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:1554",
+      "feature": "quantity"
+    },
+    {
+      "entity": {
+        "product_id": "SKU-1011"
+      },
+      "entity_grouping": [
+        "product_id"
+      ],
+      "record_refs": [
+        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727"
+      ],
+      "metric": "quantity",
+      "observed_value": 5360,
+      "baseline": 14,
+      "expected_range": {
+        "lower": 2.625,
+        "upper": 27.625
+      },
+      "method": "rule",
+      "version": "canonical-anomaly-v1",
+      "severity": "CRITICAL",
+      "score": 5346.0,
+      "limitations": [
+        "An anomaly is an unusual value, not evidence of cause or operational severity.",
+        "Seasonal baselines are used only when configured minimum matching periods exist.",
+        "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
+      ],
+      "seasonal_baseline_used": 0,
+      "id": "1ae96c9d-beaf-49e1-a5c0-9c392871968f",
+      "created_at": "2026-10-24T17:16:20.821755",
+      "source": "canonical_pipeline",
+      "detector": "rule",
+      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727",
+      "feature": "quantity"
+    },
+    {
+      "entity": {
+        "product_id": "SKU-1011"
+      },
+      "entity_grouping": [
+        "product_id"
+      ],
+      "record_refs": [
+        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727"
+      ],
+      "metric": "quantity",
+      "observed_value": 5360,
+      "baseline": 14,
+      "expected_range": {
+        "lower": 2.625,
+        "upper": 27.625
+      },
+      "method": "iqr",
+      "version": "canonical-anomaly-v1",
+      "severity": "CRITICAL",
+      "score": 5332.375,
+      "limitations": [
+        "An anomaly is an unusual value, not evidence of cause or operational severity.",
+        "Seasonal baselines are used only when configured minimum matching periods exist.",
+        "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
+      ],
+      "seasonal_baseline_used": 0,
+      "id": "66ad4e53-5988-4e87-89a3-8d998a760ae8",
+      "created_at": "2026-10-24T17:16:20.829709",
+      "source": "canonical_pipeline",
+      "detector": "iqr",
+      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727",
+      "feature": "quantity"
+    },
+    {
+      "entity": {
+        "supplier_id": "V001"
+      },
+      "entity_grouping": [
+        "supplier_id"
+      ],
+      "record_refs": [
+        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727"
+      ],
+      "metric": "quantity",
+      "observed_value": 5360,
+      "baseline": 112.5,
+      "expected_range": {
+        "lower": 0.0,
+        "upper": 244.75
+      },
+      "method": "rule",
+      "version": "canonical-anomaly-v1",
+      "severity": "CRITICAL",
+      "score": 5247.5,
+      "limitations": [
+        "An anomaly is an unusual value, not evidence of cause or operational severity.",
+        "Seasonal baselines are used only when configured minimum matching periods exist.",
+        "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
+      ],
+      "seasonal_baseline_used": 0,
+      "id": "3a9a24ac-759a-43d2-b60d-e6edcaf52804",
+      "created_at": "2026-10-24T17:16:20.837714",
+      "source": "canonical_pipeline",
+      "detector": "rule",
+      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727",
+      "feature": "quantity"
+    },
+    {
+      "entity": {
+        "supplier_id": "V001"
+      },
+      "entity_grouping": [
+        "supplier_id"
+      ],
+      "record_refs": [
+        "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727"
+      ],
+      "metric": "quantity",
+      "observed_value": 5360,
+      "baseline": 112.5,
+      "expected_range": {
+        "lower": 0.0,
+        "upper": 244.75
+      },
+      "method": "iqr",
+      "version": "canonical-anomaly-v1",
+      "severity": "CRITICAL",
+      "score": 5115.25,
+      "limitations": [
+        "An anomaly is an unusual value, not evidence of cause or operational severity.",
+        "Seasonal baselines are used only when configured minimum matching periods exist.",
+        "Isolation Forest is fitted once on the initial minimum historical baseline to bound CPU cost."
+      ],
+      "seasonal_baseline_used": 0,
+      "id": "8855fc98-6e3b-4349-9e64-4fe8221c394b",
+      "created_at": "2026-10-24T17:16:20.846231",
+      "source": "canonical_pipeline",
+      "detector": "iqr",
+      "record_ref": "49951a3b-c68c-48aa-9668-8bd3e8cfc70f:5727",
+      "feature": "quantity"
+    }
+  ],
+  "top_drivers": [
+    {
+      "driver": "supplier_x_product: V017 x SKU-1004",
+      "factor": "supplier_x_product",
+      "value": "V017 x SKU-1004",
+      "delay_rate": 0.4,
+      "baseline_delay_rate": 0.1439,
+      "difference": 0.2561,
+      "estimated_start_date": "2025-06-30T00:00:00",
+      "pre_change_rate": 0.119,
+      "post_change_rate": 0.913,
+      "pre_support": 42,
+      "post_support": 23,
+      "sample_size": 65,
+      "status": "UNVERIFIED",
+      "confounded": 0,
+      "confounding_status": "primary_driver"
+    },
+    {
+      "driver": "supplier_x_product: V017 x SKU-1009",
+      "factor": "supplier_x_product",
+      "value": "V017 x SKU-1009",
+      "delay_rate": 0.3538,
+      "baseline_delay_rate": 0.1439,
+      "difference": 0.21,
+      "estimated_start_date": "2025-05-26T00:00:00",
+      "pre_change_rate": 0.1333,
+      "post_change_rate": 0.85,
+      "pre_support": 45,
+      "post_support": 20,
+      "sample_size": 65,
+      "status": "UNVERIFIED",
+      "confounded": 0,
+      "confounding_status": "independent",
+      "difference_after_exclusion": 0.2129
+    },
+    {
+      "driver": "supplier_x_product: V017 x SKU-1003",
+      "factor": "supplier_x_product",
+      "value": "V017 x SKU-1003",
+      "delay_rate": 0.3521,
+      "baseline_delay_rate": 0.1439,
+      "difference": 0.2082,
+      "estimated_start_date": "2025-06-02T00:00:00",
+      "pre_change_rate": 0.12,
+      "post_change_rate": 0.9048,
+      "pre_support": 50,
+      "post_support": 21,
+      "sample_size": 71,
+      "status": "UNVERIFIED",
+      "confounded": 0,
+      "confounding_status": "independent",
+      "difference_after_exclusion": 0.2111
+    },
+    {
+      "driver": "supplier_x_product: V017 x SKU-1059",
+      "factor": "supplier_x_product",
+      "value": "V017 x SKU-1059",
+      "delay_rate": 0.3438,
+      "baseline_delay_rate": 0.1439,
+      "difference": 0.1999,
+      "estimated_start_date": "2025-07-07T00:00:00",
+      "pre_change_rate": 0.087,
+      "post_change_rate": 1.0,
+      "pre_support": 23,
+      "post_support": 9,
+      "sample_size": 32,
+      "status": "UNVERIFIED",
+      "confounded": 0,
+      "confounding_status": "independent",
+      "difference_after_exclusion": 0.2028
+    },
+    {
+      "driver": "supplier_x_product: V017 x SKU-1010",
+      "factor": "supplier_x_product",
+      "value": "V017 x SKU-1010",
+      "delay_rate": 0.338,
+      "baseline_delay_rate": 0.1439,
+      "difference": 0.1942,
+      "estimated_start_date": "2025-06-02T00:00:00",
+      "pre_change_rate": 0.18,
+      "post_change_rate": 0.7143,
+      "pre_support": 50,
+      "post_support": 21,
+      "sample_size": 71,
+      "status": "UNVERIFIED",
+      "confounded": 0,
+      "confounding_status": "independent",
+      "difference_after_exclusion": 0.1971
+    }
+  ],
+  "leakage_handling": {
+    "blocked_columns": [
+      {
+        "column": "delivered_timestamp",
+        "reason": "Column 'delivered_timestamp' is mapped to or represents delivered time (temporal outcome leakage)"
+      },
+      {
+        "column": "status",
+        "reason": "Outcome-style name 'status' in 'status' indicates post-event outcome information"
+      },
+      {
+        "column": "days_late",
+        "reason": "Outcome-style name 'late' in 'days_late' indicates post-event outcome information"
+      },
+      {
+        "column": "delivery_status",
+        "reason": "Outcome-style name 'status' in 'delivery_status' indicates post-event outcome information"
+      }
+    ],
+    "allowed_features": [
+      "quantity",
+      "price",
+      "supplier_id",
+      "product_id",
+      "carrier",
+      "promised_timestamp",
+      "warehouse_id",
+      "route"
+    ],
+    "overrides": [],
+    "split_method": "temporal_chronological_split"
+  },
+  "graph": {
+    "node_count": 103,
+    "edge_count": 489,
+    "node_counts_by_type": {
+      "Supplier": 25,
+      "Product": 60,
+      "Carrier": 4,
+      "Warehouse": 4,
+      "Route/Lane": 5,
+      "CustomerRegion": 5
+    },
+    "edge_counts_by_type": {
+      "SUPPLIES": 129,
+      "USES": 100,
+      "SERVES": 20,
+      "STORED_AT": 240
+    },
+    "supplier_count_note": "25 suppliers (24 known vendors + 1 unknown vendor code from POs)",
+    "top_10_unhealthy_nodes": [
+      {
+        "id": "supplier:V017",
+        "type": "Supplier",
+        "label": "Supplier: V017",
+        "source": "purchase_orders, shipments, vendors",
+        "company_id": "kaveri_foods",
+        "exposure": 1422,
+        "anomaly_count": 56,
+        "late_count": 213,
+        "health": "PROBLEM",
+        "health_status": "UNHEALTHY",
+        "metrics_vs_peer_baseline": {
+          "rate": 0.1498,
+          "late_rate": 0.1498,
+          "anomaly_rate": 0.0394,
+          "peer_average_rate": 0.0612,
+          "difference_from_peer_average": 0.0886,
+          "z_score": 3.76,
+          "total_exposure": 1422,
+          "total_late": 213,
+          "total_anomalies": 56,
+          "has_minimum_support": true
+        },
+        "evidence_refs": [
+          "08124338-4f0e-47ef-b510-308a7b25b845",
+          "0a4a9d14-0a38-4d17-9bcc-822d7034ff3d",
+          "0c6df2bf-040c-4a55-ba39-64bc8334d47d",
+          "0eacdc32-1196-4014-ae37-69d549556386",
+          "10a5133d-04a4-4d28-9c0b-3bc7a371419c",
+          "10b46805-1f3b-4757-9f62-0fb91ca6e506",
+          "17860b83-8a04-462a-ac17-48c52d23956b",
+          "227136dc-74ff-4472-92a5-faa1f7e7265b",
+          "271a5e2c-ff6f-4772-9dfb-f4b893acc978",
+          "2b12eb76-478e-445b-b461-a2dcd50f4ba2"
+        ],
+        "linked_incident_count": 0,
+        "is_incident_affected": false
+      },
+      {
+        "id": "product:SKU-1023",
+        "type": "Product",
+        "label": "Product: SKU-1023",
+        "source": "purchase_orders, shipments",
+        "company_id": "kaveri_foods",
+        "exposure": 170,
+        "anomaly_count": 0,
+        "late_count": 20,
+        "health": "PROBLEM",
+        "health_status": "UNHEALTHY",
+        "metrics_vs_peer_baseline": {
+          "rate": 0.1176,
+          "late_rate": 0.1176,
+          "anomaly_rate": 0.0,
+          "peer_average_rate": 0.0541,
+          "difference_from_peer_average": 0.0636,
+          "z_score": 2.95,
+          "total_exposure": 170,
+          "total_late": 20,
+          "total_anomalies": 0,
+          "has_minimum_support": true
+        },
+        "evidence_refs": [],
+        "linked_incident_count": 0,
+        "is_incident_affected": false
+      },
+      {
+        "id": "product:SKU-1059",
+        "type": "Product",
+        "label": "Product: SKU-1059",
+        "source": "purchase_orders, shipments",
+        "company_id": "kaveri_foods",
+        "exposure": 198,
+        "anomaly_count": 7,
+        "late_count": 23,
+        "health": "PROBLEM",
+        "health_status": "UNHEALTHY",
+        "metrics_vs_peer_baseline": {
+          "rate": 0.1162,
+          "late_rate": 0.1162,
+          "anomaly_rate": 0.0354,
+          "peer_average_rate": 0.0541,
+          "difference_from_peer_average": 0.0621,
+          "z_score": 2.88,
+          "total_exposure": 198,
+          "total_late": 23,
+          "total_anomalies": 7,
+          "has_minimum_support": true
+        },
+        "evidence_refs": [
+          "17860b83-8a04-462a-ac17-48c52d23956b",
+          "32c055e2-fe53-4d1b-893e-382c95c80a92",
+          "3f50d93c-8b50-4b7d-b0ca-5d056bcf0a3d",
+          "6110ea2d-d6a7-475b-962b-d95c2ab08cde",
+          "92edefcf-7ec3-4603-83fe-88aac18ae051",
+          "b8afbe9c-630e-44d9-ae57-7e5db9bcbdcc",
+          "fa5e8b93-d40b-4c08-ab9c-33fefe75429c"
+        ],
+        "linked_incident_count": 0,
+        "is_incident_affected": false
+      },
+      {
+        "id": "route:West-3",
+        "type": "Route/Lane",
+        "label": "Route/Lane: West-3",
+        "source": "purchase_orders, shipments",
+        "company_id": "kaveri_foods",
+        "exposure": 2507,
+        "anomaly_count": 107,
+        "late_count": 225,
+        "health": "PROBLEM",
+        "health_status": "UNHEALTHY",
+        "metrics_vs_peer_baseline": {
+          "rate": 0.0897,
+          "late_rate": 0.0897,
+          "anomaly_rate": 0.0427,
+          "peer_average_rate": 0.0701,
+          "difference_from_peer_average": 0.0196,
+          "z_score": 1.8,
+          "total_exposure": 2507,
+          "total_late": 225,
+          "total_anomalies": 107,
+          "has_minimum_support": true
+        },
+        "evidence_refs": [
+          "048fc8ce-0498-4f36-8d70-9123ce88fe8a",
+          "05070e43-acc6-4943-b5bb-870c26d14057",
+          "08210205-3a9a-411a-98a4-2cda3b1dfc9e",
+          "08f06ad6-5dc8-4761-8752-322325417376",
+          "0b4d92f9-99b7-4cbb-9789-8d98ba0bf042",
+          "0fdc128a-1d8b-4dc3-bbd9-7643578b8ae2",
+          "10a5133d-04a4-4d28-9c0b-3bc7a371419c",
+          "129fa285-a5fa-42d4-bf5b-3a01c38f9ece",
+          "145c156c-6f78-446f-a637-4eb44441a7b3",
+          "149ba773-902b-4e50-ae52-90b7f138c00c"
+        ],
+        "linked_incident_count": 0,
+        "is_incident_affected": false
+      },
+      {
+        "id": "carrier:BlueLine",
+        "type": "Carrier",
+        "label": "Carrier: BlueLine",
+        "source": "purchase_orders, shipments",
+        "company_id": "kaveri_foods",
+        "exposure": 3833,
+        "anomaly_count": 144,
+        "late_count": 359,
+        "health": "WATCH",
+        "health_status": "UNHEALTHY",
+        "metrics_vs_peer_baseline": {
+          "rate": 0.0937,
+          "late_rate": 0.0937,
+          "anomaly_rate": 0.0376,
+          "peer_average_rate": 0.0679,
+          "difference_from_peer_average": 0.0257,
+          "z_score": 1.73,
+          "total_exposure": 3833,
+          "total_late": 359,
+          "total_anomalies": 144,
+          "has_minimum_support": true
+        },
+        "evidence_refs": [
+          "0037ce2b-42cd-45a3-80b2-66978023b6a4",
+          "009b49ac-326f-47ff-b37d-f7a773ce6725",
+          "048fc8ce-0498-4f36-8d70-9123ce88fe8a",
+          "08124338-4f0e-47ef-b510-308a7b25b845",
+          "08210205-3a9a-411a-98a4-2cda3b1dfc9e",
+          "08f06ad6-5dc8-4761-8752-322325417376",
+          "0a4a9d14-0a38-4d17-9bcc-822d7034ff3d",
+          "10b46805-1f3b-4757-9f62-0fb91ca6e506",
+          "121246e9-551c-4f89-b1de-fb4bcdc4d7c1",
+          "142116e6-c618-4870-a3a8-6c1a88b44e00"
+        ],
+        "linked_incident_count": 0,
+        "is_incident_affected": false
+      },
+      {
+        "id": "product:SKU-1028",
+        "type": "Product",
+        "label": "Product: SKU-1028",
+        "source": "purchase_orders, shipments",
+        "company_id": "kaveri_foods",
+        "exposure": 180,
+        "anomaly_count": 7,
+        "late_count": 16,
+        "health": "WATCH",
+        "health_status": "UNHEALTHY",
+        "metrics_vs_peer_baseline": {
+          "rate": 0.0889,
+          "late_rate": 0.0889,
+          "anomaly_rate": 0.0389,
+          "peer_average_rate": 0.0541,
+          "difference_from_peer_average": 0.0348,
+          "z_score": 1.61,
+          "total_exposure": 180,
+          "total_late": 16,
+          "total_anomalies": 7,
+          "has_minimum_support": true
+        },
+        "evidence_refs": [
+          "41961197-5dac-4a03-9a7b-11e252330ea1",
+          "4b9c2536-9484-49e1-b72d-17772e2d5c8f",
+          "5033a5a0-5c86-4021-80eb-e9f1b340baf1",
+          "657f097b-da12-48a9-b117-d988b60dfa3c",
+          "9610d9f5-198f-42bd-bfbb-0c1c4c1df46a",
+          "c3fa82bd-7787-42b7-987b-a645e59c15e9",
+          "d26d3845-d0d8-45ff-bed5-e30c11216115"
+        ],
+        "linked_incident_count": 0,
+        "is_incident_affected": false
+      },
+      {
+        "id": "warehouse:WH-DEL",
+        "type": "Warehouse",
+        "label": "Warehouse: WH-DEL",
+        "source": "purchase_orders, shipments",
+        "company_id": "kaveri_foods",
+        "exposure": 3002,
+        "anomaly_count": 123,
+        "late_count": 228,
+        "health": "WATCH",
+        "health_status": "UNHEALTHY",
+        "metrics_vs_peer_baseline": {
+          "rate": 0.0759,
+          "late_rate": 0.0759,
+          "anomaly_rate": 0.041,
+          "peer_average_rate": 0.07,
+          "difference_from_peer_average": 0.0059,
+          "z_score": 1.52,
+          "total_exposure": 3002,
+          "total_late": 228,
+          "total_anomalies": 123,
+          "has_minimum_support": true
+        },
+        "evidence_refs": [
+          "0208eb75-8a86-4ba1-88e2-e6054e8600de",
+          "08ea5e60-fc5b-4dce-9371-c7169828fe87",
+          "0b4d92f9-99b7-4cbb-9789-8d98ba0bf042",
+          "0c6df2bf-040c-4a55-ba39-64bc8334d47d",
+          "0d43093b-cda6-41e5-a3bd-886dd3c60474",
+          "10a5133d-04a4-4d28-9c0b-3bc7a371419c",
+          "1294e269-6569-4dbe-9727-28f1958ebf61",
+          "154542ec-034a-4bcc-9d57-f9e35f13b621",
+          "17914252-6ab7-4606-ae27-c2ab71e8666f",
+          "1a07b48f-6d49-4c05-8bbc-a79967bf2e3a"
+        ],
+        "linked_incident_count": 0,
+        "is_incident_affected": false
+      },
+      {
+        "id": "product:SKU-1042",
+        "type": "Product",
+        "label": "Product: SKU-1042",
+        "source": "purchase_orders, shipments",
+        "company_id": "kaveri_foods",
+        "exposure": 189,
+        "anomaly_count": 4,
+        "late_count": 16,
+        "health": "WATCH",
+        "health_status": "UNHEALTHY",
+        "metrics_vs_peer_baseline": {
+          "rate": 0.0847,
+          "late_rate": 0.0847,
+          "anomaly_rate": 0.0212,
+          "peer_average_rate": 0.0541,
+          "difference_from_peer_average": 0.0306,
+          "z_score": 1.42,
+          "total_exposure": 189,
+          "total_late": 16,
+          "total_anomalies": 4,
+          "has_minimum_support": true
+        },
+        "evidence_refs": [
+          "7ce3a8fd-9027-4907-b244-c3b9acbc8c6a",
+          "92e6d166-02e1-493d-b25a-a81726b2f51c",
+          "a973a893-ce6c-49a9-9872-fbc3c185cefa",
+          "c6f79aae-c9f3-497f-9c2f-f7b8ea8c0790"
+        ],
+        "linked_incident_count": 0,
+        "is_incident_affected": false
+      },
+      {
+        "id": "product:SKU-1014",
+        "type": "Product",
+        "label": "Product: SKU-1014",
+        "source": "purchase_orders, shipments",
+        "company_id": "kaveri_foods",
+        "exposure": 186,
+        "anomaly_count": 8,
+        "late_count": 15,
+        "health": "WATCH",
+        "health_status": "UNHEALTHY",
+        "metrics_vs_peer_baseline": {
+          "rate": 0.0806,
+          "late_rate": 0.0806,
+          "anomaly_rate": 0.043,
+          "peer_average_rate": 0.0541,
+          "difference_from_peer_average": 0.0266,
+          "z_score": 1.23,
+          "total_exposure": 186,
+          "total_late": 15,
+          "total_anomalies": 8,
+          "has_minimum_support": true
+        },
+        "evidence_refs": [
+          "08ea5e60-fc5b-4dce-9371-c7169828fe87",
+          "25fdafd5-2c1e-40ba-9278-d661153ac490",
+          "3771e592-8ce0-4ee5-9f2a-425bf18e597f",
+          "4aa75763-172b-4695-92ed-de66c54fcd33",
+          "4b7b251d-33e5-40c3-ada7-9a0f5c238c4f",
+          "76fb5bcd-fddd-4c43-bc53-8b1af1d98085",
+          "dbddc2f8-ec78-4ac7-8d5c-44adcffd4eb0",
+          "efa6d395-009a-4889-98d5-85e85fbdacc4"
+        ],
+        "linked_incident_count": 0,
+        "is_incident_affected": false
+      },
+      {
+        "id": "product:SKU-1038",
+        "type": "Product",
+        "label": "Product: SKU-1038",
+        "source": "purchase_orders, shipments",
+        "company_id": "kaveri_foods",
+        "exposure": 200,
+        "anomaly_count": 10,
+        "late_count": 16,
+        "health": "WATCH",
+        "health_status": "UNHEALTHY",
+        "metrics_vs_peer_baseline": {
+          "rate": 0.08,
+          "late_rate": 0.08,
+          "anomaly_rate": 0.05,
+          "peer_average_rate": 0.0541,
+          "difference_from_peer_average": 0.0259,
+          "z_score": 1.2,
+          "total_exposure": 200,
+          "total_late": 16,
+          "total_anomalies": 10,
+          "has_minimum_support": true
+        },
+        "evidence_refs": [
+          "1310c4eb-ee81-4559-ac09-f3e02533e45f",
+          "1c5e1954-5ece-45fa-94aa-678bd77cc3aa",
+          "391be3c7-cf37-4ebd-b7c2-92562da605c2",
+          "4aeb9458-4a9d-46f6-ac72-ddb3668f8d19",
+          "50937dad-0c40-4c5f-8157-2d0138e2265e",
+          "52567907-0dd9-4a90-8b61-eb8af789c862",
+          "63032bb0-2dbb-40fc-b8e2-bcf43595c635",
+          "c3de73ba-6433-430a-bca6-12bc17bc0542",
+          "da4edfc7-444e-4cb9-8793-d0724c080480",
+          "dab1106d-b01e-47ac-8254-22df652e2cee"
+        ],
+        "linked_incident_count": 0,
+        "is_incident_affected": false
+      }
+    ]
+  },
+  "roles_verified": {
+    "viewer": {
+      "upload_dataset": {
+        "allowed": false,
+        "status_code": 403
+      },
+      "confirm_mapping": {
+        "allowed": false,
+        "status_code": 403
+      },
+      "run_pipeline": {
+        "allowed": false,
+        "status_code": 403
+      },
+      "confirm_hypothesis": {
+        "allowed": false,
+        "status_code": 403
+      },
+      "approve_action": {
+        "allowed": false,
+        "status_code": 403
+      },
+      "manage_users": {
+        "allowed": false,
+        "status_code": 403
+      }
+    },
+    "analyst": {
+      "confirm_hypothesis": {
+        "allowed": false,
+        "status_code": 403
+      },
+      "approve_action": {
+        "allowed": false,
+        "status_code": 403
+      },
+      "manage_users": {
+        "allowed": false,
+        "status_code": 403
+      },
+      "toggle_kill_switch": {
+        "allowed": false,
+        "status_code": 403
+      }
+    },
+    "reviewer": {
+      "manage_users": {
+        "allowed": false,
+        "status_code": 403
+      },
+      "toggle_kill_switch": {
+        "allowed": false,
+        "status_code": 403
+      }
+    },
+    "admin": {
+      "manage_users": {
+        "allowed": true,
+        "status_code": 200
+      },
+      "toggle_kill_switch": {
+        "allowed": true,
+        "status_code": 200
+      }
+    }
+  },
+  "failures": [],
+  "incidents_count": 0,
+  "recommendations_count": 0,
+  "recommendations": [],
+  "drift_report": {
+    "dataset_name": "purchase_orders",
+    "status": "DRIFT_ALERT",
+    "row_count_change_fraction": 0.9502487562189055,
+    "schema": {
+      "added_columns": [
+        "priority",
+        "unit_price"
+      ],
+      "removed_columns": [
+        "unit_cost",
+        "warehouse_code"
+      ],
+      "type_changes": {}
+    },
+    "null_rate_unit": "fraction",
+    "units": {
+      "row_count_change": "fraction",
+      "null_rate_change": "fraction (0.0 to 1.0)",
+      "numeric_mean_shift": "baseline_standard_deviations (z-units)",
+      "category_concentration_change": "fraction (0.0 to 1.0)"
+    },
+    "numeric_mean_shift_in_baseline_std": {},
+    "category_concentration_changes": {},
+    "alerts": [
+      "schema_changed",
+      "row_count_change_exceeds_configured_threshold",
+      "null_rate_change:promised_arrival"
+    ],
+    "drift_is_warning_only": true,
+    "triggers_automatic_retrain": false,
+    "warning": "Drift is a warning, never an automatic retrain trigger.",
+    "limitations": [
+      "Aggregate distribution changes are indicators, not proof of a cause.",
+      "Drift is a warning only; automatic retraining is disallowed."
+    ]
+  },
+  "isolation": {
+    "company_a_datasets_count": 9,
+    "company_b_datasets_count": 1,
+    "cross_company_token_blocked_status": 403
+  }
+}

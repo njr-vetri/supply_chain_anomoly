@@ -1,0 +1,210 @@
+thresholds:
+  min_data_quality: 0.8
+  minimum_hypothesis_evidence: 1
+weights:
+  recency: 0.4
+  severity: 0.4
+  confidence: 0.2
+operations:
+  dry_run: true
+  kill_switch: false
+  rate_limit_actions: 10
+  rate_limit_window_seconds: 60
+data:
+  freshness_max_age_hours: 168
+  max_null_fraction: 1.0
+  csv_chunk_rows: 50000
+uploads:
+  max_size_bytes: 52428800
+  chunk_bytes: 1048576
+  chunk_rows: 10000
+  max_zip_entries: 500
+  max_zip_uncompressed_bytes: 209715200
+  max_zip_compression_ratio: 100
+audit:
+  log_path: data/processed/audit_events.jsonl
+anomaly:
+  robust_z_threshold: 3.5
+  iqr_multiplier: 1.5
+  isolation_forest_contamination: 0.01
+  isolation_forest_estimators: 100
+  random_seed: 0
+  rule_thresholds:
+    olist_delivery_days: 30
+    dataco_scheduled_days: 14
+    online_retail_weekly_quantity: 1000
+  canonical_metrics:
+    quantity:
+      entity_groupings: [[supplier_id], [product_id]]
+      rule_threshold: 1000
+      rule_direction: absolute
+      severity_high: 3
+      severity_critical: 6
+    price:
+      entity_groupings: [[supplier_id], [product_id]]
+      rule_threshold: 10000
+      rule_direction: above
+      severity_high: 3
+      severity_critical: 6
+  rolling_window_records: 52
+  minimum_baseline_records: 8
+  seasonality_minimum_records: 20
+delay_prediction:
+  prediction_time_role: event_timestamp
+  label_role: post_outcome
+  feature_allowlist: [quantity, price, supplier_id, product_id, carrier, destination]
+  feature_availability:
+    quantity: event_timestamp
+    price: event_timestamp
+    supplier_id: event_timestamp
+    product_id: event_timestamp
+    carrier: event_timestamp
+    destination: event_timestamp
+  blocked_feature_roles: [post_outcome, delivered_timestamp, status, custom_fields]
+  train_fraction: 0.6
+  validation_fraction: 0.2
+  minimum_training_rows: 30
+  probability_threshold: 0.5
+  random_seed: 42
+forecasting:
+  allowed_granularities: [daily, weekly, monthly]
+  daily_max_span_days: 90
+  weekly_min_span_days: 90
+  monthly_min_span_days: 730
+  minimum_history_periods: 8
+  moving_average_periods: 4
+  seasonal_periods:
+    daily: 7
+    weekly: 52
+    monthly: 12
+  prediction_interval_level: 0.9
+  backtest_folds: 3
+  horizon_periods: 4
+evaluation:
+  random_seed: 42
+  train_fraction: 0.6
+  validation_fraction: 0.2
+  test_fraction: 0.2
+  tree_max_depth: 12
+  random_forest_estimators: 100
+  rule_thresholds:
+    dataco_scheduled_days_median: 3
+    olist_seller_delay_days: 0
+  forecasting:
+    moving_average_weeks: 4
+    seasonal_period_weeks: 52
+    cv_folds: 3
+    horizon_weeks: 4
+risk:
+  weights:
+    delay_probability: 0.2
+    affected_order_count: 0.15
+    supplier_exposure: 0.15
+    evidence_strength: 0.2
+    evidence_freshness: 0.1
+    recurrence: 0.1
+    uncertainty: 0.1
+  freshness_max_age_hours: 168
+  count_saturation: 100
+  supplier_exposure_saturation: 100
+  recurrence_saturation: 10
+  minimum_supporting_evidence: 2
+  minimum_evidence_strength: 0.6
+company_risk_scoring:
+  weights:
+    likelihood: 0.35
+    impact: 0.30
+    evidence_strength: 0.20
+    uncertainty: 0.15
+  thresholds:
+    low_max: 0.25
+    medium_max: 0.50
+    high_max: 0.75
+driver_analysis:
+  minimum_affected_support: 2
+  minimum_baseline_support: 2
+  adjusted_p_value_threshold: 0.05
+  minimum_effect_size: 0.1
+  minimum_change_point_segment: 5
+  maximum_record_references: 100
+recommendations:
+  seller_recurrence_threshold: 2
+  notify_probability_threshold: 0.7
+  monitoring_recurrence_threshold: 1
+  minimum_history_rows_for_effect_estimate: 30
+workflow:
+  timer_interval_seconds: 300
+  max_attempts: 3
+  retry_backoff_seconds: 1.0
+connectors:
+  scheduled_folder: data/incoming
+  folder_chunk_rows: 5000
+  rest_endpoint_env: REST_POLL_URL
+  rest_token_env: REST_POLL_TOKEN
+  rest_timeout_seconds: 15
+  database_url_env: SOURCE_DATABASE_URL
+  database_table: supply_chain_records
+  database_chunk_rows: 1000
+  notifications_enabled_env: CONNECTORS_ENABLED
+alerts:
+  dedup_window_seconds: 900
+  severity_routes:
+    LOW: [console, file]
+    MEDIUM: [console, file]
+    HIGH: [console, file]
+    CRITICAL: [console, file]
+  escalation:
+    - after_seconds: 1800
+      from_severity: MEDIUM
+      to_severity: HIGH
+    - after_seconds: 3600
+      from_severity: HIGH
+      to_severity: CRITICAL
+  group_by: [source, incident_key]
+actions:
+  dry_run: true
+  rate_limit_actions: 10
+  rate_limit_window_seconds: 60
+  circuit_breaker_failures: 3
+  circuit_breaker_cooldown_seconds: 120
+  retries: 2
+  retry_backoff_seconds: 0.25
+  max_retry_backoff_seconds: 4
+storage:
+  # SQLite by default. A PostgreSQL SQLAlchemy URL can be supplied later via config.
+  url: sqlite:///data/processed/supply_chain.db
+pipeline:
+  max_predictions_per_dataset: 1000
+  max_investigations_per_dataset: 20
+  max_persisted_anomalies_per_dataset: 1000
+  enable_isolation_forest: true
+  retry_attempts: 3
+  retry_backoff_seconds: 1.0
+  severity_thresholds:
+    MEDIUM: 1
+    HIGH: 100
+    CRITICAL: 1000
+  feature_thresholds:
+    olist_delivery_deviation_days: 30
+    dataco_shipping_days: 14
+    online_retail_weekly_quantity: 1000
+drift:
+  max_row_count_change_fraction: 0.25
+  max_null_rate_change: 0.1
+  max_numeric_mean_shift: 1.0
+  max_category_concentration_change: 0.2
+model_promotion:
+  primary_metric: macro_f1
+  minimum_improvement: 0.0
+  maximum_brier_increase: 0.02
+  require_brier: true
+validation:
+  missing_required: true
+  duplicates: true
+  invalid_dates: true
+  negative_quantity: true
+  broken_relationships: true
+  unit_currency_consistency: true
+  schema_change: true
+  outliers: true
+  outlier_iqr_multiplier: 1.5
