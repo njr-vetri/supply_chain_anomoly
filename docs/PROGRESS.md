@@ -1,5 +1,36 @@
 # Phase progress
 
+## Completed: AnomalyPlus Industrial UI Overhaul with Collapsible Sidebar & 9 Dedicated Pages
+
+- **Execution Date**: 2026-10-25
+- **Brand & Theme**:
+  - Renamed project to **AnomalyPlus** (`AnomalyPlus — Industrial Supply Chain Risk Intelligence`).
+  - Adopted deep industrial charcoal/slate aesthetic (`#0e1217`) with subtle `#21262d` dividers, slate cards (`#161b22`), and warm golden amber accents (`#e5a93c`).
+  - Removed watermark (`Local API only / No external services`).
+  - Streamlined header: replaced verbose `admin ADMIN local` badge pill with clean circular avatar `A` and quick sign-out control.
+- **Collapsible Sidebar ("Three Lines" Hamburger Navigation)**:
+  - Added responsive hamburger toggle button (`☰`) at top-left.
+  - Smooth sidebar transition (`transform: translateX(-100%)` / `margin-left: 0; width: 100%`) when toggled.
+- **9 Dedicated Functional Pages**:
+  1. 📥 **Data Ingestion**: Multi-table file upload dropzone (`.zip`, `.csv`, `.xlsx`, `.json`), automated profiling, and canonical schema mapping review (auto-accepted vs ambiguous awaiting approval).
+  2. ⚡ **Automated Analysis**: Dynamic 9-stage analysis execution engine with live duration ticker, active executing stage indicator with amber pulsing glow (`stage-running-glow`), factual zero-hallucination NLP stage explanations from `src/nlp/stage_explainer.py`, and real-time execution audit stream.
+  3. 🔍 **Anomalies**: Consolidated anomaly ledger deduplicated at the record level across detector ensembles (`iqr`, `robust_zscore`, `isolation_forest`) with severity filters.
+  4. 📈 **Forecasts vs Baseline**: Predictive delay classification and rolling-origin demand forecasting directly compared against historical naive baselines (MAE and sMAPE error reduction metrics).
+  5. 🧬 **Contributing Factors**: Root-cause factor ledger tracking confounding carrier $\times$ route interactions, standardized "contributing factor" terminology, and reviewer hypothesis lifecycle (`UNVERIFIED` $\rightarrow$ `SUPPORTED` $\rightarrow$ `CONFIRMED`).
+  6. 💡 **Recommendations**: Mitigation counterfactual playbooks marked with `HYPOTHETICAL SIMULATION` badges, with human reviewer Approve / Reject dry-run actions.
+  7. 🚨 **Alerts**: Incident triage dispatch history, delivery status monitoring (`SENT`, `DRY_RUN`), duplicate suppression stats, and notification adapter health.
+  8. 🌐 **Compact Network**: Topological flow summary table (Supplier $\leftrightarrow$ Product $\leftrightarrow$ Carrier $\leftrightarrow$ Route) with bottleneck risk scores and degree centrality.
+  9. 🏢 **Company Scope**: Multi-tenant boundary isolation, active workspace and project selector, zero data bleed verification, and immutable SHA-256 audit chaining.
+- **Safety & Operator Controls**:
+  - **Interactive Kill Switch**: Converted static element into working toggle button calling backend `PUT /api/v1/admin/kill-switch` with real-time visual Armed (green) vs Triggered/Emergency Halted (pulsing red) feedback.
+  - **Model Rollback**: Interactive rollback trigger calling backend `POST /api/v1/models/registry/rollback` to immediately revert candidate models in `src/ml/model_registry.json`.
+  - Cleaned up obsolete role-switch selector and schedule activity components.
+- **Verification & Testing Results**:
+  - Frontend Build: `tsc -b && vite build` built successfully in 25.75s with **0 errors and 0 warnings**.
+  - Vitest Unit & Component Suite: **5 test files passed, 33 tests passed in 46.55s**.
+  - Backend API & Pytest Suite: **193 passed, 1 skipped in 122.34s**.
+  - Browser Automation Verification: Verified responsive hamburger toggle, all 9 dedicated view transitions, interactive analysis run, and captured UI artifacts via `browser_subagent`.
+
 ## Completed: Simplified One-Page ML Prototype & Automated Transparency Pipeline
 
 - **Execution Date**: 2026-10-25

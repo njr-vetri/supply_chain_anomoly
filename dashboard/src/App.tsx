@@ -2,9 +2,9 @@ import { lazy, Suspense, useCallback, useEffect, useMemo, useState, type ReactNo
 import {
   Activity, AlertTriangle, ArrowDownUp, Bell, Building2, CheckCircle2, ChevronRight,
   CircleHelp, Clock3, Database, FileSearch, FileText, Gauge, History,
-  LayoutDashboard, ListChecks, LoaderCircle, LockKeyhole, Moon, Network, RefreshCw,
+  LayoutDashboard, ListChecks, LoaderCircle, Moon, Network, RefreshCw,
   Search, Settings2, ShieldAlert, Sun, Truck, X, ClipboardCheck, Cpu, BarChart2,
-  Leaf, Users, Key, KeyRound, LogOut
+  Leaf, Users, Key, LogOut, Menu, RotateCcw
 } from 'lucide-react'
 import { ApiClient, ApiError, defaultApiUrl } from './api/client'
 import type { Action, Approval, FindingKind, Hypothesis, Incident, IncidentDetail, Page, QualityItem, Recommendation, Role } from './api/types'
@@ -25,7 +25,7 @@ import { SystemHealthScreen } from './components/SystemHealthScreen'
 import { UsersScreen } from './components/UsersScreen'
 import { ApiKeysScreen } from './components/ApiKeysScreen'
 import { ProjectSelector } from './components/ProjectSelector'
-import { OnePagePrototype } from './components/OnePagePrototype'
+import { OnePagePrototype, type PrototypeView } from './components/OnePagePrototype'
 import './style.css'
 
 type Screen =
@@ -365,6 +365,21 @@ function App() {
   const [changePwdOpen, setChangePwdOpen] = useState(false)
   const [profileModalOpen, setProfileModalOpen] = useState(false)
   const [showAdvancedNav, setShowAdvancedNav] = useState(false)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [protoView, setProtoView] = useState<PrototypeView>('analysis')
+  const [rollbackBanner, setRollbackBanner] = useState<string | null>(null)
+
+  const protoNavItems: Array<{ id: PrototypeView; label: string; icon: ReactNode; section?: string }> = useMemo(() => [
+    { id: 'ingestion', label: 'Data Ingestion', icon: <Database size={16} />, section: 'PIPELINE INPUT' },
+    { id: 'analysis', label: 'Automated Analysis', icon: <Cpu size={16} /> },
+    { id: 'anomalies', label: 'Anomalies', icon: <ShieldAlert size={16} />, section: 'INTELLIGENCE RESULTS' },
+    { id: 'forecasts', label: 'Forecasts vs Baseline', icon: <BarChart2 size={16} /> },
+    { id: 'factors', label: 'Contributing Factors', icon: <ListChecks size={16} /> },
+    { id: 'recommendations', label: 'Recommendations', icon: <ClipboardCheck size={16} /> },
+    { id: 'alerts', label: 'Alerts', icon: <Bell size={16} /> },
+    { id: 'network', label: 'Compact Network', icon: <Network size={16} /> },
+    { id: 'company', label: 'Company Scope', icon: <Building2 size={16} />, section: 'ORGANIZATION' },
+  ], [])
 
   // Show login gate when no token is present
   const needsLogin = !session.token.trim()
@@ -577,30 +592,77 @@ function App() {
   // Show login page when no authenticated token is available
   if (needsLogin) return <LoginScreen onLogin={handleLogin} expiredMessage={expiredMsg} />
 
+  const handleToggleKillSwitch = async () => {
+    if (session.role !== 'admin') {
+      alert('Admin role required to toggle Kill Switch')
+      return
+    }
+    const nextEnabled = !killSwitch.value?.enabled
+    setKillSwitch({ value: { enabled: nextEnabled }, loading: false, error: null })
+    try {
+      await client.toggleKillSwitch({
+        enabled: nextEnabled,
+        reason: 'Operator manual toggle from AnomalyPlus topbar',
+      })
+    } catch (err) {
+      setKillSwitch({ value: { enabled: !nextEnabled }, loading: false, error: handleAuthError(err) })
+    }
+  }
+
+  const handleRollbackModel = async () => {
+    try {
+      await client.rollbackModel('canonical_delay_model', 'Manual rollback requested from AnomalyPlus header')
+      setRollbackBanner('Model rolled back to previous verified version successfully.')
+      setTimeout(() => setRollbackBanner(null), 4000)
+      void refresh()
+    } catch (err: unknown) {
+      setRollbackBanner(`Rollback failed: ${err instanceof Error ? err.message : String(err)}`)
+    }
+  }
+
   return (
-    <div className="app-frame min-h-screen bg-canvas text-ink dark:bg-[#0a1020] dark:text-slate-100">
-      <aside className="sidebar" style={{ overflowY: 'auto' }}>
+    <div className="app-frame min-h-screen bg-[#0e1217] text-slate-100">
+      <aside className={`sidebar ${!sidebarOpen ? 'collapsed' : ''}`} style={{ overflowY: 'auto' }}>
         <div className="brand">
           <div className="brand-mark"><Activity size={19} strokeWidth={2.4} /></div>
           <div>
-            <p className="brand-title">Northstar</p>
-            <p className="brand-caption">RISK OPERATIONS</p>
+            <p className="brand-title">AnomalyPlus</p>
+            <p className="brand-caption">RISK INTELLIGENCE</p>
           </div>
         </div>
         <nav aria-label="Main navigation" className="space-y-1">
-          {navItems.map((entry) => (
-            <div key={entry.id}>
-              {entry.section && <div className="sidebar-section-label">{entry.section}</div>}
-              <button
-                className={`nav-link ${screen === entry.id || (selected && entry.id === 'incidents') ? 'nav-active' : ''}`}
-                onClick={() => navigate(entry.id)}
-              >
-                {entry.icon}{entry.label}
-                {entry.id === 'incidents' && <span className="nav-count">{incidents.value?.count ?? '—'}</span>}
-              </button>
-            </div>
-          ))}
-          <div className="pt-2 px-3">
+          {!showAdvancedNav ? (
+            protoNavItems.map((entry) => (
+              <div key={entry.id}>
+                {entry.section && <div className="sidebar-section-label">{entry.section}</div>}
+                <button
+                  className={`nav-link ${screen === 'overview' && protoView === entry.id ? 'nav-active' : ''}`}
+                  onClick={() => {
+                    setProtoView(entry.id)
+                    setScreen('overview')
+                    setSelected(null)
+                  }}
+                >
+                  {entry.icon}{entry.label}
+                  {entry.id === 'anomalies' && <span className="nav-count">{incidents.value?.count ?? '—'}</span>}
+                </button>
+              </div>
+            ))
+          ) : (
+            navItems.map((entry) => (
+              <div key={entry.id}>
+                {entry.section && <div className="sidebar-section-label">{entry.section}</div>}
+                <button
+                  className={`nav-link ${screen === entry.id || (selected && entry.id === 'incidents') ? 'nav-active' : ''}`}
+                  onClick={() => navigate(entry.id)}
+                >
+                  {entry.icon}{entry.label}
+                  {entry.id === 'incidents' && <span className="nav-count">{incidents.value?.count ?? '—'}</span>}
+                </button>
+              </div>
+            ))
+          )}
+          <div className="pt-2 px-2">
             <button
               onClick={() => setShowAdvancedNav(!showAdvancedNav)}
               className="text-[11px] text-slate-400 hover:text-slate-200 flex items-center gap-1.5 transition py-1"
@@ -616,35 +678,43 @@ function App() {
         </div>
         <CompanySwitcher context={company} onChange={handleCompanyChange} />
         <div className="sidebar-bottom">
-          <div className="sidebar-note">
-            <LockKeyhole size={15} />
-            <span>Local API only<br /><small>No external services</small></span>
-          </div>
           <div
-            className="profile-row cursor-pointer transition-colors hover:bg-black/5 dark:hover:bg-white/5"
+            className="profile-row cursor-pointer transition-colors hover:bg-white/5"
             onClick={() => setProfileModalOpen(true)}
             title="Click to view and edit Admin Profile & Scope"
           >
             <div className="avatar">{(session.username || session.role).slice(0, 1).toUpperCase()}</div>
             <div className="min-w-0">
-              <p className="truncate text-xs font-semibold text-ink dark:text-white">{session.username || session.email}</p>
-              <p className="text-[10px] text-muted dark:text-slate-400 capitalize">{session.role} · {company.companyId}</p>
+              <p className="truncate text-xs font-semibold text-white">{session.username || session.email}</p>
+              <p className="text-[10px] text-slate-400 capitalize">{session.role} · {company.companyId}</p>
             </div>
           </div>
         </div>
       </aside>
 
-      <main className="main-area">
+      <main className={`main-area ${!sidebarOpen ? 'expanded' : ''}`}>
         <header className="topbar">
-          <div className="min-w-0">
-            <p className="eyebrow">SUPPLY CHAIN INTELLIGENCE</p>
-            <h1>
-              {selected
-                ? 'Incident investigation'
-                : screen === 'overview'
-                ? 'Operations overview'
-                : (navItems.find((entry) => entry.id === screen)?.label || 'Page not found')}
-            </h1>
+          <div className="flex items-center gap-2 min-w-0">
+            <button
+              className="icon-button mr-1"
+              aria-label="Toggle navigation sidebar"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              title={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+            >
+              <Menu size={18} />
+            </button>
+            <div className="min-w-0">
+              <p className="eyebrow">ANOMALYPLUS RISK INTELLIGENCE</p>
+              <h1>
+                {selected
+                  ? 'Incident investigation'
+                  : screen === 'overview'
+                  ? (!showAdvancedNav
+                      ? protoNavItems.find((p) => p.id === protoView)?.label || 'Automated Analysis'
+                      : 'Operations overview')
+                  : (navItems.find((entry) => entry.id === screen)?.label || 'Page not found')}
+              </h1>
+            </div>
           </div>
           <div className="top-actions flex items-center gap-3">
             {/* Project Selector */}
@@ -658,33 +728,40 @@ function App() {
               <span className={`status-dot ${connected ? 'bg-emerald-500' : 'bg-slate-400'}`} />
               {connected ? 'API online' : 'API offline'}
             </div>
-            <div className={`switch-pill ${killSwitch.value?.enabled ? 'switch-on' : ''}`}>
-              <span className="switch-indicator" />
-              Kill switch: {killSwitch.value ? (killSwitch.value.enabled ? 'ON' : 'OFF') : 'UNKNOWN'}
-              {killSwitch.value && <TypeBadge kind="FACT" />}
-            </div>
 
-            {/* User Badge & Profile */}
-            <div className="flex items-center gap-2 rounded-xl border border-line bg-surface/50 px-3 py-1.5 dark:border-slate-800">
-              <div className="text-right">
-                <p className="text-xs font-semibold leading-tight text-ink dark:text-white">{session.username || session.email || 'User'}</p>
-                <p className="text-[10px] text-muted">{company.companyId}</p>
+            {/* Interactive Kill Switch Button */}
+            <button
+              type="button"
+              onClick={handleToggleKillSwitch}
+              className={`kill-switch-btn ${killSwitch.value?.enabled ? 'triggered' : 'armed'}`}
+              title="Click to toggle Kill Switch emergency halt"
+            >
+              <span className={`status-dot ${killSwitch.value?.enabled ? 'bg-rose-500 animate-pulse' : 'bg-emerald-400'}`} />
+              <span>{killSwitch.value?.enabled ? 'KILL SWITCH: TRIGGERED' : 'KILL SWITCH: ARMED'}</span>
+              {killSwitch.value && <TypeBadge kind="FACT" />}
+            </button>
+
+            {/* Rollback Model Button */}
+            <button
+              type="button"
+              onClick={handleRollbackModel}
+              className="icon-button"
+              title="Rollback model registry"
+            >
+              <RotateCcw size={15} />
+            </button>
+
+            {/* Clean User Avatar and Logout (No admin ADMIN local clutter) */}
+            <div className="flex items-center gap-1.5 pl-2 border-l border-slate-800">
+              <div
+                className="avatar cursor-pointer"
+                title={`Signed in as ${session.username || session.email} (${session.role})`}
+                onClick={() => setProfileModalOpen(true)}
+              >
+                {(session.username || session.role || 'A').slice(0, 1).toUpperCase()}
               </div>
-              <span
-                className="rounded-md bg-brand/10 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-brand"
-                title={`Role: ${session.role}`}
-              >
-                {session.role}
-              </span>
               <button
-                className="icon-button ml-1 p-1 text-muted hover:text-ink"
-                title="Change password"
-                onClick={() => setChangePwdOpen(true)}
-              >
-                <KeyRound size={15} />
-              </button>
-              <button
-                className="icon-button p-1 text-rose-500 hover:text-rose-700"
+                className="icon-button p-1 text-slate-400 hover:text-rose-400"
                 title="Sign out"
                 onClick={handleLogout}
               >
@@ -700,6 +777,16 @@ function App() {
             </button>
           </div>
         </header>
+
+        {rollbackBanner && (
+          <div className="p-3 bg-amber-500/15 border-b border-amber-500/30 text-amber-300 text-xs flex items-center justify-between px-8">
+            <div className="flex items-center gap-2">
+              <RotateCcw size={14} />
+              <span>{rollbackBanner}</span>
+            </div>
+            <button onClick={() => setRollbackBanner(null)}><X size={14} /></button>
+          </div>
+        )}
 
         {dryRunKnown && (
           <div className="dry-banner" role="status">
@@ -726,9 +813,17 @@ function App() {
                 showAdvancedNav ? (
                   <Overview incidents={incidents} quality={quality} onOpen={() => navigate('incidents')} onUpload={() => navigate('datasources')} retry={() => void refresh()} />
                 ) : (
-                  <OnePagePrototype client={client} projectId={company.projectId || 'project-kaveri_foods'} userRole={session.role} onRoleChange={(r) => setSession({ ...session, role: r })} />
+                  <OnePagePrototype
+                    client={client}
+                    projectId={company.projectId || 'project-kaveri_foods'}
+                    userRole={session.role}
+                    onRoleChange={(r) => setSession({ ...session, role: r })}
+                    activeView={protoView}
+                    onViewChange={setProtoView}
+                  />
                 )
               )
+
             : screen === 'incidents' ? <IncidentList state={incidents} filtered={filtered} search={search} setSearch={setSearch} sort={sort} setSort={setSort} severity={severity} setSeverity={setSeverity} status={status} setStatus={setStatus} open={(id) => void loadDetail(id)} retry={() => void refresh()} />
             : screen === 'graph' ? <Suspense fallback={<LoadingState large />}><DependencyGraph client={client} incidents={items} /></Suspense>
             : screen === 'hypotheses' ? <HypothesisLedgerScreen client={client} role={session.role} incidents={items} />
